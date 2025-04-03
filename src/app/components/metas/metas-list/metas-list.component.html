@@ -1,0 +1,17 @@
+<div class="metas-list">
+  <div *ngFor="let meta of metas" class="meta-card">
+    <div class="meta-info">
+      <h3>{{ meta.descricao }}</h3>
+      <p>ID: {{ meta.id }}</p>
+      <p>Objetivo: {{ meta.valorObjetivo | currency }}</p>
+      <p>Atual: {{ meta.valorAtual | currency }}</p>
+      <p>Início: {{ meta.dataInicio | date }}</p>
+      <p>Término: {{ meta.dataTermino | date }}</p>
+      <p>Status: {{ meta.status }}</p>
+    </div>
+    <div class="meta-actions">
+      <button (click)="edit.emit(meta)" class="btn-edit">Editar</button>
+      <button (click)="delete.emit(meta.id!)" class="btn-delete">Excluir</button>
+    </div>
+  </div>
+</div>
