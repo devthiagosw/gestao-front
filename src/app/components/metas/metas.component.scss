@@ -1,0 +1,30 @@
+.metas-container {
+  padding: 20px;
+  h2 { text-align: center; }
+  .btn-novo {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #1976d2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  width: 400px;
+}
