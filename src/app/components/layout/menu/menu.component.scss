@@ -1,0 +1,30 @@
+.backgroundColor {
+  /* Degradê moderno e sombra */
+  background: linear-gradient(90deg, #101728, #2a3a50);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  padding: 1rem 1.5rem; // aumento da altura
+  transition: background 0.3s ease;
+}
+
+.backgroundColor:hover {
+  background: linear-gradient(90deg, #0e1420, #243049);
+}
+
+.backgroundColor a {
+  color: #fff; 
+  font-weight: 300;        // fonte mais fina
+  font-size: 1.2rem;       // fonte maior
+  letter-spacing: 0.1rem;  // palavras mais afastadas
+  transition: color 0.3s ease;
+  text-decoration: none;
+  padding: 0.7rem;         // aumento de espaçamento interno
+}
+
+.backgroundColor a:hover {
+  color: #f35e5e;
+}
+
+/* Ajuste geral do navbar */
+.navbar {
+  padding: 1rem 1.5rem;    // navbar mais alta
+}
