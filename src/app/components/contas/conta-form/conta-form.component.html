@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h2>{{ conta.id ? 'Editar conta' : 'Nova conta' }}</h2>
+  <button class="close-btn" (click)="onClose()">×</button>
+</div>
+<form (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label>Usuário ID:</label>
+    <input type="number" [(ngModel)]="conta.usuario.id" name="usuarioId" required>
+  </div>
+  <div class="form-group">
+    <label>Descrição:</label>
+    <input type="text" [(ngModel)]="conta.nomeConta" name="NomeConta" required>
+  </div>
+  <div class="form-group">
+    <label>Valor Objetivo:</label>
+    <input type="number" [(ngModel)]="conta.tipoConta" name="TipoConta" required>
+  </div>
+  <div class="form-group">
+    <label>Valor Atual:</label>
+    <input type="number" [(ngModel)]="conta.saldoInicial" name="SaldoInicial" required>
+  </div>
+  <div class="form-group">
+    <label>Data Início:</label>
+    <input type="date" [(ngModel)]="conta.dataCriacao" name="DataCriacao" required>
+  </div>
+  <div class="form-group">
+    <label>Status:</label>
+    <input type="text" [(ngModel)]="conta.status" name="status" required>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn-save">{{ conta.id ? 'Atualizar' : 'Salvar' }}</button>
+    <button type="button" (click)="onClose()" class="btn-cancel">Cancelar</button>
+  </div>
+</form>
+
