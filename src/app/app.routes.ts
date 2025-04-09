@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/layout/login/login.component';
 import { PrincipalComponent } from './components/layout/principal/principal.component';
-import { MetasComponent } from './components/metas/metas.component';
+import { MetasListComponent } from './components/metas/metas-list/metas-list.component';
 import { ContasListComponent } from './components/contas/conta-list/conta-list.component';
 import { CategoriasComponent } from './components/categorias/categorias.component';
 import { OrcamentosComponent } from './components/orcamentos/orcamentos.component';
@@ -17,7 +17,7 @@ export const routes: Routes = [
       component: PrincipalComponent,
       children: [
         { path: "dashboard", component: DashboardComponent  },
-        { path: "app-metas", component: MetasComponent },
+        { path: "app-metas", component: MetasListComponent },
         {path:"conta", component: ContasListComponent},
         { path: "categorias", component: CategoriasComponent },  
         { path: "orcamentos", component: OrcamentosComponent },

@@ -1,38 +1,73 @@
-<div class="modal-header">
-  <h2>{{ meta.id ? 'Editar Meta' : 'Nova Meta' }}</h2>
-  <button class="close-btn" (click)="onClose()">×</button>
+<div class="modern-modal">
+  <div class="modal-header">
+    <h2>{{ meta.id ? 'Editar Meta' : 'Nova Meta' }}</h2>
+    <button mat-icon-button (click)="onClose()" aria-label="Fechar">
+      <mat-icon>X</mat-icon>
+    </button>
+  </div>
+
+  <form class="modal-form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <!-- Lado esquerdo -->
+      <div class="left">
+        <div class="form-item">
+          <input placeholder="Descrição" [(ngModel)]="meta.descricao" name="descricao" required />
+        </div>
+
+        <div class="form-item">
+          <input type="date" [(ngModel)]="meta.dataInicio" name="dataInicio" required />
+        </div>
+
+        <div class="form-item">
+          <input type="date" [(ngModel)]="meta.dataTermino" name="dataTermino" required />
+        </div>
+
+        <div class="form-item">
+          <input placeholder="Status" [(ngModel)]="meta.status" name="status" required />
+        </div>
+      </div>
+
+      <!-- Lado direito -->
+      <div class="right">
+        <!-- Valor Objetivo -->
+        <div class="form-item">
+          <span class="label">Valor objetivo</span>
+          <input
+            type="number"
+            [(ngModel)]="meta.valorObjetivo"
+            name="valorObjetivo"
+            class="input-currency"
+            placeholder="0.00"
+          />
+        </div>
+      
+        <!-- Valor Atual -->
+        <div class="form-item">
+          <span class="label">Valor atual</span>
+          <input
+            type="number"
+            [(ngModel)]="meta.valorAtual"
+            name="valorAtual"
+            class="input-currency"
+            placeholder="0.00"
+          />
+        </div>
+      
+        <!-- ID Usuário -->
+        <div class="form-item">
+          <span class="label">ID Usuário</span>
+          <input
+            type="number"
+            [(ngModel)]="meta.usuario.id"
+            name="usuarioId"
+            placeholder="Digite o ID"
+          />
+        </div>
+      </div>
+    </div>      
+
+    <div class="footer-actions">
+      <button class="rounded-button" type="submit">{{ meta.id ? 'Atualizar' : 'Salvar' }}</button>
+    </div>
+  </form>
 </div>
-<form (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label>Usuário ID:</label>
-    <input type="number" [(ngModel)]="meta.usuario.id" name="usuarioId" required>
-  </div>
-  <div class="form-group">
-    <label>Descrição:</label>
-    <input type="text" [(ngModel)]="meta.descricao" name="descricao" required>
-  </div>
-  <div class="form-group">
-    <label>Valor Objetivo:</label>
-    <input type="number" [(ngModel)]="meta.valorObjetivo" name="valorObjetivo" required>
-  </div>
-  <div class="form-group">
-    <label>Valor Atual:</label>
-    <input type="number" [(ngModel)]="meta.valorAtual" name="valorAtual" required>
-  </div>
-  <div class="form-group">
-    <label>Data Início:</label>
-    <input type="date" [(ngModel)]="meta.dataInicio" name="dataInicio" required>
-  </div>
-  <div class="form-group">
-    <label>Data Término:</label>
-    <input type="date" [(ngModel)]="meta.dataTermino" name="dataTermino" required>
-  </div>
-  <div class="form-group">
-    <label>Status:</label>
-    <input type="text" [(ngModel)]="meta.status" name="status" required>
-  </div>
-  <div class="form-actions">
-    <button type="submit" class="btn-save">{{ meta.id ? 'Atualizar' : 'Salvar' }}</button>
-    <button type="button" (click)="onClose()" class="btn-cancel">Cancelar</button>
-  </div>
-</form>
