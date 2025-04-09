@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/layout/login/login.component';
 import { PrincipalComponent } from './components/layout/principal/principal.component';
 import { MetasComponent } from './components/metas/metas.component';
-import { ContasComponent } from './components/contas/contas.component';
+import { ContasListComponent } from './components/contas/conta-list/conta-list.component';
 import { CategoriasComponent } from './components/categorias/categorias.component';
 import { OrcamentosComponent } from './components/orcamentos/orcamentos.component';
 import { TagsComponent } from './components/tags/tags.component';
@@ -18,7 +18,7 @@ export const routes: Routes = [
       children: [
         { path: "dashboard", component: DashboardComponent  },
         { path: "app-metas", component: MetasComponent },
-        { path: "contas", component: ContasComponent },
+        {path:"conta", component: ContasListComponent},
         { path: "categorias", component: CategoriasComponent },  
         { path: "orcamentos", component: OrcamentosComponent },
         { path: "tags", component: TagsComponent },
