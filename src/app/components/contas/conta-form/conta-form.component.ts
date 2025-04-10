@@ -9,15 +9,15 @@ import { Conta } from '../../../models/conta';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './conta-form.component.html',
-  styleUrls: ['./conta-form.component.scss'],
+  styleUrls: ['./conta-form.component.scss']
 })
 export class ContaFormComponent {
   @Input() conta!: Conta;
-  @Output() submitConta = new EventEmitter<Conta>();
+  @Output() formSubmit = new EventEmitter<Conta>();
   @Output() close = new EventEmitter<void>();
 
   onSubmit(): void {
-    this.submitConta.emit(this.conta);
+    this.formSubmit.emit(this.conta);
   }
 
   onClose(): void {

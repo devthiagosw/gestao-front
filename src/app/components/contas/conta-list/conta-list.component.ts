@@ -16,15 +16,7 @@ import { Conta } from '../../../models/conta';
 })
 export class ContasListComponent implements OnInit {
   conta: Conta[] = [];
-  contaForm: Conta = {
-    id: 0,
-    usuario: { id: 0},
-    nomeConta: "",
-    tipoConta: "",
-    saldoInicial: 0,
-    dataCriacao: "" ,// Use string ou Date, dependendo da forma como você processa a data no TypeScript
-    status: ""
-  };
+  contaForm: Conta = new Conta();
   buscaId: number | null = null;
   usuarioId: number | null = null;
   contaEncontrada: Conta | null = null;
@@ -67,15 +59,12 @@ export class ContasListComponent implements OnInit {
     if (conta) {
       this.contaForm = { ...conta };
     } else {
-      this.contaForm = {
-        id: 0,
-        usuario: { id: 0},
-        nomeConta: "",
-        tipoConta: "",
-        saldoInicial: 0,
-        dataCriacao: "" ,// Use string ou Date, dependendo da forma como você processa a data no TypeScript
-        status: ""
-      };
+      this.contaForm = new Conta();
+      this.contaForm.usuario = {id: 1};
+      this.contaForm.nomeConta = "Conta Padrao";
+      this.contaForm.tipoConta = "CORRENTE";
+      this.contaForm.saldoInicial = 0;
+      this.contaForm.status = "ATIVA";
     }
     this.showModal = true;
   }
@@ -94,6 +83,7 @@ export class ContasListComponent implements OnInit {
   }
 
   saveConta(conta: Conta): void {
+    console.log(conta);
     this.contaService.save(conta).subscribe({
       next: (res) => {
         console.log('Conta salva:', res);

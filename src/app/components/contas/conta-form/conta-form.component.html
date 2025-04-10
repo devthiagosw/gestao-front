@@ -2,34 +2,53 @@
   <h2>{{ conta.id ? 'Editar conta' : 'Nova conta' }}</h2>
   <button class="close-btn" (click)="onClose()">×</button>
 </div>
+
 <form (ngSubmit)="onSubmit()">
+  <!-----
   <div class="form-group">
     <label>Usuário ID:</label>
     <input type="number" [(ngModel)]="conta.usuario.id" name="usuarioId" required>
   </div>
+--->
   <div class="form-group">
-    <label>Descrição:</label>
-    <input type="text" [(ngModel)]="conta.nomeConta" name="NomeConta" required>
+    <label>Nome da Conta:</label>
+    <input type="text" [(ngModel)]="conta.nomeConta" name="nomeConta" required>
   </div>
+
   <div class="form-group">
-    <label>Valor Objetivo:</label>
-    <input type="number" [(ngModel)]="conta.tipoConta" name="TipoConta" required>
+    <label>Tipo da Conta:</label>
+   
+      <select name="tipoConta" required [(ngModel)]="conta.tipoConta">
+        <option value="CORRENTE">CORRENTE</option>
+        <option value="POUPANCA">POUPANÇA</option>
+        <option value="INVESTIMENTO">INVESTIMENTO</option>
+      </select>
+
   </div>
+
   <div class="form-group">
-    <label>Valor Atual:</label>
-    <input type="number" [(ngModel)]="conta.saldoInicial" name="SaldoInicial" required>
+    <label>Saldo Inicial:</label>
+    <input type="number" [(ngModel)]="conta.saldoInicial" name="saldoInicial" required>
   </div>
+<!-- 
   <div class="form-group">
-    <label>Data Início:</label>
-    <input type="date" [(ngModel)]="conta.dataCriacao" name="DataCriacao" required>
+    <label>Data de Criação:</label>
+    <input type="date" [(ngModel)]="conta.dataCriacao" name="dataCriacao" required>
   </div>
+-->
+  @if(conta.id > 0){
   <div class="form-group">
     <label>Status:</label>
-    <input type="text" [(ngModel)]="conta.status" name="status" required>
+    <select name="status" required [(ngModel)]="conta.status">
+      <option value="ATIVA">ATIVA</option>
+      <option value="INATIVA">INATIVA</option>
+      <option value="BLOQUEADA">BLOQUEADA</option>
+    </select>
   </div>
+}
+
   <div class="form-actions">
     <button type="submit" class="btn-save">{{ conta.id ? 'Atualizar' : 'Salvar' }}</button>
     <button type="button" (click)="onClose()" class="btn-cancel">Cancelar</button>
   </div>
 </form>
-
