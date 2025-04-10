@@ -1,0 +1,145 @@
+<div class="orcamentos-container">
+  <button class="btn-novo" (click)="openModal()">Novo Orcamento</button>
+
+  <!-- Busca por ID -->
+  <div class="result-flex">
+    <section class="search-section">
+      <div class="search-box">
+        <input
+          type="number"
+          placeholder="ID da Orcamento"
+          [(ngModel)]="buscaId"
+        />
+        <button class="search-button" (click)="getOrcamentoById()">
+          Buscar
+        </button>
+      </div>
+    </section>
+
+    <!-- Resultado da busca por ID -->
+    <div class="result-card" *ngIf="orcamentoEncontrado">
+      <h3>Orcamento Encontrado</h3>
+      <div class="orcamento-info">
+        <p>
+          <strong>Data Criação:</strong> {{ orcamentoEncontrado.dataCriacao }}
+        </p>
+        <p>
+          <strong>Período:</strong>
+          {{ orcamentoEncontrado.periodo | currency }}
+        </p>
+        <p>
+          <strong>Valor Limite:</strong>
+          {{ orcamentoEncontrado.valorLimite | currency }}
+        </p>
+        <p>
+          <strong>Categoria:</strong>
+          <span class="status-chip">{{
+            orcamentoEncontrado.categoria.id
+          }}</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Busca por orcamentos em andamento -->
+    <section class="search-section">
+      <div class="search-box">
+        <input
+          type="number"
+          placeholder="ID do Usuário"
+          [(ngModel)]="usuarioId"
+        />
+        <button class="search-button" (click)="searchOrcamentosPorUsuario()">
+          Buscar
+        </button>
+      </div>
+    </section>
+
+    <!-- Resultado da busca por usuário -->
+    <div class="result-list" *ngIf="orcamentosPorUsuario?.length">
+      <h3>Orcamentos Por Usuário Encontrados</h3>
+      <div class="orcamento-card" *ngFor="let o of orcamentosPorUsuario">
+        <p>
+          <strong> Usuário ID ---/> {{ o.usuario.id }}</strong>
+          <!-- Alterado para exibir o ID do usuário -->
+        </p>
+        <p>Período: {{ o.periodo }}</p>
+        <p>
+          Valor Limite:
+          {{ o.valorLimite | currency }}
+        </p>
+        <p>
+          Categoria: <span class="status-chip">{{ o.categoria.id }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Tabela -->
+  <table mat-table [dataSource]="orcamentos" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="usuarioId">
+      <th mat-header-cell *matHeaderCellDef>Usuário ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.usuario.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="categoriaId">
+      <th mat-header-cell *matHeaderCellDef>Categoria ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.categoria.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="valorLimite">
+      <th mat-header-cell *matHeaderCellDef>Valor Limite</th>
+      <td mat-cell *matCellDef="let element">{{ element.valorLimite }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="periodo">
+      <th mat-header-cell *matHeaderCellDef>Período</th>
+      <td mat-cell *matCellDef="let element">{{ element.periodo }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dataCriacao">
+      <th mat-header-cell *matHeaderCellDef>Data Criação</th>
+      <td mat-cell *matCellDef="let element">{{ element.dataCriacao }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let orcamento">
+        <div class="action-buttons">
+          <button
+            class="icon-button"
+            (click)="openModal(orcamento)"
+            title="Editar"
+          >
+            <mat-icon>✏️</mat-icon>
+          </button>
+          <button
+            class="icon-button danger"
+            (click)="deleteOrcamento(orcamento.id)"
+            title="Excluir"
+          >
+            <mat-icon>🗑️</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+      <app-orcamentos-form
+        [orcamento]="orcamentoForm"
+        (submitOrcamento)="handleFormSubmit($event)"
+        (close)="closeModal()"
+      >
+      </app-orcamentos-form>
+    </div>
+  </div>
+</div>
