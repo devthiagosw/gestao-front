@@ -1,0 +1,74 @@
+.modern-modal {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', sans-serif;
+  
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+  
+      h2 {
+        font-size: 1.5rem;
+        margin: 0;
+      }
+  
+      mat-icon {
+        font-weight: bold;
+      }
+    }
+  
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+  
+    .form-grid.single {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  
+    .form-item {
+      display: flex;
+      align-items: center;
+      background: #f4f4f4;
+      border-radius: 12px;
+      padding: 12px 16px;
+      gap: 12px;
+  
+      input {
+        border: none;
+        outline: none;
+        background: transparent;
+        flex: 1;
+        font-size: 1rem;
+      }
+    }
+  
+    .footer-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+  
+      .rounded-button {
+        background: #101728;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 50px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1rem;
+  
+        &.cancel {
+          background: #f44336;
+        }
+      }
+    }
+  }
+  

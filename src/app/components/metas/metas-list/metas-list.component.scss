@@ -2,6 +2,10 @@
   max-width: 90%;
   margin: 0 auto;
   padding: 24px;
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 }
 
 .search-section {
@@ -77,8 +81,12 @@ table[mat-table] td {
 table[mat-table] th {
   background-color: #101728;
   color: #fff;
-  text-align: left;
+  text-align: center;
 }
+
+table[mat-table] td {
+    text-align: center;
+  }
 
 table[mat-table] tr:nth-child(even) {
   background-color: #f2f2f2;
