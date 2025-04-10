@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card'; // <-- Nova importação
 import { MetasFormComponent } from '../metas-form/metas-form.component';
 import { MetaService } from '../../../services/metas.service';
+import { UsuarioService } from '../../../services/usuarios.service';
 
 @Component({
 	selector: 'app-metas-list',
@@ -49,12 +50,23 @@ export class MetasListComponent implements OnInit {
 	usuarioId: number | null = null;
 	metaEncontrada: Meta | null = null;
 	metasEmAndamento: Meta[] = [];
+  usuarios: any[] = [];
 
-	constructor(private metaService: MetaService) {}
+	constructor(private metaService: MetaService, private usuarioService: UsuarioService) {}
+
 
 	ngOnInit(): void {
-		this.listMetas();
-	}
+    this.listMetas();
+    this.loadUsuarios(); // 👈 Aqui!
+  }
+
+  loadUsuarios(): void {
+    this.usuarioService.findAll().subscribe({
+      next: (data) => this.usuarios = data,
+      error: (err) => console.error('Erro ao carregar usuários:', err)
+    });
+  }
+  
 
 	listMetas(): void {
 		this.metaService.findAll().subscribe({
