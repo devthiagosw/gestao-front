@@ -1,0 +1,124 @@
+.modern-modal {
+  background: transparent;
+  padding: 32px;
+  max-width: 100%;
+  font-family: "Segoe UI", sans-serif;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+  }
+
+  .modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; // Espaçamento entre os itens do formulário
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; // Divide o formulário em duas colunas
+    gap: 16px; // Espaçamento entre as colunas
+  }
+
+  .form-item {
+    display: flex;
+    align-items: center;
+    background: #f4f4f4;
+    border-radius: 12px;
+    padding: 10px 16px;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    .form-item select {
+      width: 100%;
+      background-color: #f5f5f5;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 16px;
+      color: #333;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    .form-item select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+
+    input {
+      border: none;
+      outline: none;
+      background: transparent;
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .label {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .value-display {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #101728;
+    }
+
+    mat-form-field {
+      width: 100%; // Faz o seletor ocupar toda a largura do container
+    }
+
+    input,
+    mat-select {
+      font-size: 14px;
+    }
+  }
+
+  .mat-form-field {
+    display: block;
+    margin: 0;
+  }
+
+  .footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+
+    .rounded-button {
+      background: #101728;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  }
+}
+
+.custom-mat-field {
+  width: 1%;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 4px 8px;
+}
+
+.custom-matield at-form-field-wrapper {
+  padding: 0;
+}
+
+cutom-mat-fieldmat-fm-field-flex {
+  background-color: transpent;
+  border-radius: 10px;
+}
