@@ -1,0 +1,58 @@
+<form [formGroup]="form" (ngSubmit)="salvarOuAtualizar()" class="p-4">
+
+  @if (categoria.dataCriacao) {
+    <p>Data de criação: {{ categoria.dataCriacao | date:'short' }}</p>
+  }
+
+  <div class="mb-3">
+    <label class="form-label">Usuário</label>
+    <div class="d-flex align-items-center gap-2">
+      <span class="form-control">
+        {{ categoria.usuario?.nome || 'Nenhum selecionado' }}
+      </span>
+      <button type="button" class="btn btn-outline-primary" (click)="abrirModalUsuario(modalUsuario)">Selecionar</button>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Nome da Categoria</label>
+    <input type="text" class="form-control" formControlName="nomeCategoria" />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Tipo</label>
+    <select class="form-select" formControlName="tipo">
+      @for (t of tipos; track t) {
+        <option [value]="t">{{ t }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Ícone</label>
+    <input type="text" class="form-control" formControlName="icone" />
+  </div>
+
+  <div class="text-end">
+    <button type="submit" class="btn btn-success">Salvar</button>
+  </div>
+</form>
+
+<ng-template #modalUsuario let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Usuário</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+
+  <div class="modal-body">
+    <ul class="list-group">
+      @for (u of usuarios; track u.id) {
+        <li
+          class="list-group-item list-group-item-action"
+          (click)="selecionarUsuario(u)">
+          {{ u.nome }}
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>
