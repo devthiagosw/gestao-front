@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <h2>Listagem de Categorias</h2>
+
+  <!-- Botão de nova categoria -->
+  <div class="mb-3 text-end">
+    <button class="btn btn-success" (click)="abrirModalFormulario()">
+      Nova Categoria
+    </button>
+  </div>
+
+  <table class="table table-bordered table-striped mt-3">
+    <thead class="table-dark">
+      <tr>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Ícone</th>
+        <th>Usuário</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of categorias; track c?.id) {
+        <tr>
+          <td>{{ c.nomeCategoria }}</td>
+          <td>{{ c.tipo }}</td>
+          <td>{{ c.icone }}</td>
+          <td>{{ c.usuario.nome }}</td>
+          <td>
+            <button class="btn btn-sm btn-warning me-2" (click)="editar(c.id!)">Editar</button>
+            <button class="btn btn-sm btn-danger" (click)="deletar(c.id!)">Excluir</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

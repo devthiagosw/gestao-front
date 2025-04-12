@@ -43,7 +43,6 @@ export class ContasListComponent implements OnInit {
     this.contaService.findAll().subscribe({
       next: (data) => {
         this.conta = data;
-        console.log('Contas:', data);
       },
       error: (err) => console.error('Erro ao consultar conta:', err)
     });
