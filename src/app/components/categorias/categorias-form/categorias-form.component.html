@@ -1,16 +1,21 @@
 <form [formGroup]="form" (ngSubmit)="salvarOuAtualizar()" class="p-4">
-
   @if (categoria.dataCriacao) {
-    <p>Data de criação: {{ categoria.dataCriacao | date:'short' }}</p>
+  <p>Data de criação: {{ categoria.dataCriacao | date : "short" }}</p>
   }
 
   <div class="mb-3">
     <label class="form-label">Usuário</label>
     <div class="d-flex align-items-center gap-2">
       <span class="form-control">
-        {{ categoria.usuario?.nome || 'Nenhum selecionado' }}
+        {{ categoria.usuario.nome || "Nenhum selecionado" }}
       </span>
-      <button type="button" class="btn btn-outline-primary" (click)="abrirModalUsuario(modalUsuario)">Selecionar</button>
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalUsuario(modalUsuario)"
+      >
+        Selecionar
+      </button>
     </div>
   </div>
 
@@ -23,7 +28,7 @@
     <label class="form-label">Tipo</label>
     <select class="form-select" formControlName="tipo">
       @for (t of tipos; track t) {
-        <option [value]="t">{{ t }}</option>
+      <option [value]="t">{{ t }}</option>
       }
     </select>
   </div>
@@ -47,11 +52,12 @@
   <div class="modal-body">
     <ul class="list-group">
       @for (u of usuarios; track u.id) {
-        <li
-          class="list-group-item list-group-item-action"
-          (click)="selecionarUsuario(u)">
-          {{ u.nome }}
-        </li>
+      <li
+        class="list-group-item list-group-item-action"
+        (click)="selecionarUsuario(u)"
+      >
+        {{ u.nome }}
+      </li>
       }
     </ul>
   </div>

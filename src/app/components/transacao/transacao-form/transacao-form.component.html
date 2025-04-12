@@ -1,0 +1,231 @@
+<form class="p-4" (ngSubmit)="onSubmit()">
+  <!-- Data -->
+  <p *ngIf="transacao.dataTransacao">
+    Data da transação: {{ transacao.dataTransacao | date : "shortDate" }}
+  </p>
+
+  <!-- Usuário -->
+  <div class="mb-3">
+    <label class="form-label">Usuário</label>
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        class="form-control"
+        [value]="getUsuarioSelecionado()?.nome || 'Nenhum selecionado'"
+        readonly
+      />
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalUsuario(modalUsuario)"
+      >
+        Selecionar
+      </button>
+    </div>
+  </div>
+
+  <!-- Conta -->
+  <div class="mb-3">
+    <label class="form-label">Conta</label>
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        class="form-control"
+        [value]="
+          getContaSelecionada()?.nomeConta || 'Nenhuma conta selecionada'
+        "
+        readonly
+      />
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalConta(modalConta)"
+      >
+        Selecionar
+      </button>
+    </div>
+  </div>
+
+  <!-- Categoria -->
+  <div class="mb-3">
+    <label class="form-label">Categoria</label>
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        class="form-control"
+        [value]="
+          getCategoriaSelecionada()?.nomeCategoria ||
+          'Nenhuma categoria selecionada'
+        "
+        readonly
+      />
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalCategoria(modalCategoria)"
+      >
+        Selecionar
+      </button>
+    </div>
+  </div>
+
+  <!-- Tags -->
+  <!-- <div class="mb-3">
+    <label class="form-label">Tags</label>
+    <div class="d-flex flex-wrap gap-2">
+      <span
+        *ngFor="let tag of getTagsSelecionadas(); trackBy: trackById"
+        class="badge bg-primary"
+      >
+        {{ tag.nome }}
+        <button
+          type="button"
+          class="btn-close btn-close-white ms-1"
+          (click)="removerTag(tag)"
+        ></button>
+      </span>
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalTag(modalTag)"
+      >
+        Adicionar Tag
+      </button>
+    </div>
+  </div> -->
+
+  <!-- Tipo -->
+  <div class="mb-3">
+    <label class="form-label">Tipo</label>
+    <select
+      class="form-select"
+      [(ngModel)]="transacao.tipo"
+      name="tipo"
+      required
+    >
+      <option value="ENTRADA">Entrada</option>
+      <option value="SAIDA">Saída</option>
+    </select>
+  </div>
+
+  <!-- Descrição -->
+  <div class="mb-3">
+    <label class="form-label">Descrição</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="transacao.descricao"
+      name="descricao"
+      required
+    />
+  </div>
+
+  <!-- Valor -->
+  <div class="mb-3">
+    <label class="form-label">Valor</label>
+    <input
+      currencyMask
+      class="form-control"
+      [(ngModel)]="transacao.valor"
+      name="valor"
+      required
+    />
+  </div>
+
+  <!-- Forma de Pagamento -->
+  <div class="mb-3">
+    <label class="form-label">Forma de Pagamento</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="transacao.formaPagamento"
+      name="formaPagamento"
+    />
+  </div>
+
+  <!-- Botões -->
+  <div class="text-end">
+    <button type="submit" class="btn btn-success">
+      {{ transacao.id ? "Atualizar" : "Salvar" }}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="onClose()">
+      Cancelar
+    </button>
+  </div>
+</form>
+
+<!-- Modal de Seleção de Usuário -->
+<ng-template #modalUsuario let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Usuário</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let u of usuarios; trackBy: trackById"
+        (click)="selecionarUsuario(u)"
+      >
+        {{ u.nome }}
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<!-- Modal de Seleção de Conta -->
+<ng-template #modalConta let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Conta</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let c of contas; trackBy: trackById"
+        (click)="selecionarConta(c)"
+      >
+        {{ c.nomeConta }}
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<!-- Modal de Seleção de Categoria -->
+<ng-template #modalCategoria let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Categoria</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let cat of categorias; trackBy: trackById"
+        (click)="selecionarCategoria(cat)"
+      >
+        {{ cat.nomeCategoria }}
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<!-- Modal de Seleção de Tag -->
+<!-- <ng-template #modalTag let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Tag</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let t of tags; trackBy: trackById"
+        (click)="selecionarTag(t)"
+      >
+        {{ t.nome }}
+      </li>
+    </ul>
+  </div>
+</ng-template> -->

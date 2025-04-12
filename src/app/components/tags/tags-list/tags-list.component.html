@@ -12,7 +12,10 @@
         [value]="getTagNomeSelecionada()"
         readonly
       />
-      <button class="btn btn-outline-primary" (click)="abrirModalSelecionarTag()">
+      <button
+        class="btn btn-outline-primary"
+        (click)="abrirModalSelecionarTag()"
+      >
         Selecionar Tag
       </button>
       <button class="search-button" (click)="getTagById()">Buscar</button>
@@ -21,40 +24,40 @@
 
   <!-- Resultado da busca por ID -->
   @if (tagEncontrada) {
-    <div class="result-list">
-      <h3>Tag Encontrada</h3>
-      <div class="meta-card">
-        <p><strong>ID:</strong> {{ tagEncontrada.id }}</p>
-        <p><strong>Nome:</strong> {{ tagEncontrada.nome }}</p>
-      </div>
+  <div class="result-list">
+    <h3>Tag Encontrada</h3>
+    <div class="meta-card">
+      <p><strong>ID:</strong> {{ tagEncontrada.id }}</p>
+      <p><strong>Nome:</strong> {{ tagEncontrada.nome }}</p>
     </div>
+  </div>
   }
 
   <!-- Tabela -->
   @if (tags.length > 0) {
-    <table mat-table [dataSource]="tags" class="mat-elevation-z8">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let tag">{{ tag.id }}</td>
-      </ng-container>
-      <ng-container matColumnDef="nome">
-        <th mat-header-cell *matHeaderCellDef>Nome</th>
-        <td mat-cell *matCellDef="let tag">{{ tag.nome }}</td>
-      </ng-container>
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Ações</th>
-        <td mat-cell *matCellDef="let tag">
-          <button mat-icon-button color="primary" (click)="openModal(tag)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteTag(tag.id!)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+  <table mat-table [dataSource]="tags" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let tag">{{ tag.id }}</td>
+    </ng-container>
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let tag">{{ tag.nome }}</td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let tag">
+        <button mat-icon-button color="primary" (click)="openModal(tag)">
+          <mat-icon>✏️</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteTag(tag.id!)">
+          <mat-icon>🗑️</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
   }
 
   <!-- Modal de Seleção de Tag -->
@@ -66,12 +69,12 @@
     <div class="modal-body p-0">
       <ul class="list-group list-group-flush">
         @for (t of tags; track t.id) {
-          <li
-            class="list-group-item list-group-item-action"
-            (click)="selecionarTag(t)"
-          >
-            {{ t.nome }}
-          </li>
+        <li
+          class="list-group-item list-group-item-action"
+          (click)="selecionarTag(t)"
+        >
+          {{ t.nome }}
+        </li>
         }
       </ul>
     </div>

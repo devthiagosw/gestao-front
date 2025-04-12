@@ -5,9 +5,6 @@ import { Categoria } from '../../../models/categoria';
 import { CategoriaService } from '../../../services/categoria.service';
 import { TipoCategoria } from '../../../enums/tipo-categoria';
 import { Usuario } from '../../../models/usuario';
-
-
-
 import { NgbModal, NgbModalRef, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { GlobalHandlerService } from '../../../services/global-handler.service';
@@ -56,7 +53,7 @@ export class CategoriasFormComponent implements OnInit {
       error: (err) => this.handler.tratarErro(err)
     });
   }
-  
+
 
   abrirModalUsuario(template: any): void {
     this.modalRef = this.modalService.open(template, { size: 'md' });

@@ -1,3 +1,4 @@
+
 export class Meta {
   id?: number;
   usuario!: { id: number };
@@ -7,8 +8,10 @@ export class Meta {
   dataInicio!: string;
   dataTermino!: string;
   status!: string;
-  
+
   constructor(init?: Partial<Meta>) {
     Object.assign(this, init);
   }
 }
+
+

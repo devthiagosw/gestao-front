@@ -1,159 +1,201 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { CommonModule, NgIf, NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Orcamento } from '../../../models/orcamentos';
-
+import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card'; // <-- Nova importação
-import { OrcamentosFormComponent } from '../orcamentos-form/orcamentos-form.component';
+
+import { Orcamento } from '../../../models/orcamentos';
 import { OrcamentoService } from '../../../services/orcamentos.service';
+import { UsuarioService } from '../../../services/usuarios.service';
+import { GlobalHandlerService } from '../../../services/global-handler.service';
+import { SwalService } from '../../../services/swal.service';
+import { OrcamentosFormComponent } from '../orcamentos-form/orcamentos-form.component';
+import { CategoriaService } from '../../../services/categoria.service';
 
 @Component({
 	selector: 'app-orcamentos-list',
 	standalone: true,
 	imports: [
 		CommonModule,
+		NgIf,
+		NgForOf,
 		FormsModule,
+		NgbModalModule,
 		MatTableModule,
 		MatButtonModule,
 		MatIconModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatCardModule, // <-- Adicionado
-		OrcamentosFormComponent,
-
 	],
 	templateUrl: './orcamentos-list.component.html',
 	styleUrls: ['./orcamentos-list.component.scss']
 })
 export class OrcamentosListComponent implements OnInit {
 	orcamentos: Orcamento[] = [];
-	orcamentoForm: Orcamento = {
-		usuario: { id: 0 },
-		categoria: { id: 0 },
-		valorLimite: 0,
-		periodo: '',
-		dataCriacao: '',
-	};
-	showModal: boolean = false;
-	displayedColumns: string[] = ['id', 'usuarioId', 'categoriaId', 'valorLimite', 'periodo', 'dataCriacao', 'actions']; // <-- Corrigido
-
-	// NOVAS PROPRIEDADES DE BUSCA
+	usuarios: any[] = [];
+	categorias: any[] = [];
 	buscaId: number | null = null;
 	usuarioId: number | null = null;
 	categoriaId: number | null = null;
 	orcamentoEncontrado: Orcamento | null = null;
 	orcamentosPorUsuario: Orcamento[] = [];
+	orcamentosPorCategoria: Orcamento[] = [];
 
-	constructor(private orcamentoService: OrcamentoService) { }
+	displayedColumns = [
+		'id', 'usuarioId', 'categoriaId', 'valorLimite',
+		'periodo', 'dataCriacao', 'actions'
+	];
+
+	@ViewChild('modalUsuario') modalUsuarioTpl!: TemplateRef<any>;
+	@ViewChild('modalCategoria') modalCategoriaTpl!: TemplateRef<any>;
+	@ViewChild('modalSelecionarOrcamento') modalSelecionarOrcamentoTpl!: TemplateRef<any>;
+
+	private usuarioModalRef!: NgbModalRef;
+	private categoriaModalRef!: NgbModalRef;
+	private selecionarOrcamentoRef!: NgbModalRef;
+	private formModalRef!: NgbModalRef;
+
+	constructor(
+		private orcamentoService: OrcamentoService,
+		private usuarioService: UsuarioService,
+		private categoriaService: CategoriaService,
+		private handler: GlobalHandlerService,
+		private swal: SwalService,
+		private modalService: NgbModal
+	) { }
 
 	ngOnInit(): void {
 		this.listOrcamentos();
+		this.loadUsuarios();
+		this.loadCategorias();
 	}
 
 	listOrcamentos(): void {
 		this.orcamentoService.findAll().subscribe({
-			next: (data) => this.orcamentos = data,
-			error: (err) => console.error('Erro:', err)
+			next: data => this.orcamentos = data,
+			error: err => this.handler.tratarErro(err)
 		});
 	}
 
-	// NOVOS MÉTODOS DE BUSCA
-	getOrcamentoById(): void {
-		if (this.buscaId !== null) {
-			this.orcamentoService.findById(this.buscaId).subscribe({
-				next: (data) => {
-					this.orcamentoEncontrado = data;
-					console.log('Orcamento encontrado:', data);
-				},
-				error: (err) => console.error('Erro ao buscar orcamento por ID:', err)
-			});
-		}
+	loadUsuarios(): void {
+		this.usuarioService.findAll().subscribe({
+			next: data => this.usuarios = data,
+			error: err => this.handler.tratarErro(err)
+		});
+	}
+	loadCategorias(): void {
+		this.categoriaService.findAll().subscribe({
+			next: data => this.categorias = data,
+			error: err => this.handler.tratarErro(err)
+		});
 	}
 
-	searchOrcamentosPorUsuario(): void {
+
+	searchOrcamentosByUsuarioId(): void {
 		if (this.usuarioId !== null) {
 			this.orcamentoService.findByUsuarioId(this.usuarioId).subscribe({
-				next: (data) => {
-					this.orcamentosPorUsuario = data;
-					console.log('Orcamentos encontrados por Usuario:', data);
-				},
-				error: (err) => console.error('Erro ao buscar orcamentos por usuario:', err)
+				next: data => this.orcamentosPorUsuario = data,
+				error: err => this.handler.tratarErro(err)
 			});
 		}
 	}
 
-	searchOrcamentosPorUsuarioECategoria(): void {
-		if (this.usuarioId !== null && this.categoriaId !== null) {
-			this.orcamentoService.findByUsuarioIdAndCategoriaId(this.usuarioId, this.categoriaId).subscribe({
-				next: (data) => {
-					this.orcamentosPorUsuario = data;
-					console.log('Orcamentos encontrados por Usuario e Categoria:', data);
-				},
-				error: (err) => console.error('Erro ao buscar orcamentos por usuario e categoria:', err)
+	searchOrcamentosByCategoriaId(): void {
+		if (this.categoriaId !== null) {
+			this.orcamentoService.findByCategoriaId(this.categoriaId).subscribe({
+				next: data => this.orcamentosPorCategoria = data,
+				error: err => this.handler.tratarErro(err)
 			});
 		}
 	}
 
-	openModal(orcamento?: Orcamento): void {
+	abrirModalFormulario(orcamento?: Orcamento): void {
+		this.formModalRef = this.modalService.open(OrcamentosFormComponent, { size: 'lg' });
 		if (orcamento) {
-			this.orcamentoForm = { ...orcamento };
-		} else {
-			this.orcamentoForm = {
-				usuario: { id: 0 },
-				categoria: { id: 0 },
-				valorLimite: 0,
-				periodo: '',
-				dataCriacao: '',
-			};
+			this.formModalRef.componentInstance.orcamento = { ...orcamento };
 		}
-		this.showModal = true;
-	}
+		this.formModalRef.componentInstance.usuarios = this.usuarios;
+		this.formModalRef.componentInstance.categorias = this.categorias;
 
-	closeModal(): void {
-		this.showModal = false;
-	}
+		this.formModalRef.componentInstance.submitOrcamento.subscribe((o: Orcamento) => {
+			const action = o.id
+				? this.orcamentoService.update(o, o.id!)
+				: this.orcamentoService.save(o);
 
-	handleFormSubmit(orcamento: Orcamento): void {
-		if (orcamento.id) {
-			this.updateOrcamento(orcamento.id, orcamento);
-		} else {
-			this.saveOrcamento(orcamento);
-		}
-		this.closeModal();
-	}
+			action.subscribe({
+				next: () => {
+					this.swal.sucesso(o.id ? 'Orcamento atualizado!' : 'Orcamento criado!');
+					this.listOrcamentos();
+				},
+				error: err => this.handler.tratarErro(err)
+			});
 
-	saveOrcamento(orcamento: Orcamento): void {
-		this.orcamentoService.save(orcamento).subscribe({
-			next: (res) => {
-				console.log('Orcamento salva:', res);
-				this.listOrcamentos();
-			},
-			error: (err) => console.error('Erro ao salvar:', err)
+			this.formModalRef.close();
+		});
+
+		this.formModalRef.componentInstance.close.subscribe(() => {
+			this.formModalRef.close();
 		});
 	}
 
-	updateOrcamento(id: number, orcamento: Orcamento): void {
-		this.orcamentoService.update(orcamento, id).subscribe({
-			next: (res) => {
-				console.log('Orcamento atualizado:', res);
-				this.listOrcamentos();
-			},
-			error: (err) => console.error('Erro ao atualizar:', err)
-		});
+	abrirModalUsuario(): void {
+		this.usuarioModalRef = this.modalService.open(this.modalUsuarioTpl, { size: 'md' });
 	}
 
-	deleteOrcamento(id: number): void {
-		this.orcamentoService.deleteById(id).subscribe({
-			next: (res) => {
-				console.log('Orcamento excluída:', res);
-				this.listOrcamentos();
-			},
-			error: (err) => console.error('Erro ao excluir:', err)
+
+	selecionarUsuario(u: any): void {
+		this.usuarioId = u.id;
+		this.usuarioModalRef.close();
+	}
+
+	abrirModalCategoria(): void {
+		this.categoriaModalRef = this.modalService.open(this.modalCategoriaTpl, { size: 'md' });
+	}
+
+	selecionarCategoria(c: any): void {
+		this.categoriaId = c.id;
+		this.categoriaModalRef.close();
+	}
+
+
+	selecionarOrcamento(m: Orcamento): void {
+		this.buscaId = m.id!;
+		this.selecionarOrcamentoRef.close();
+	}
+
+	trackById(_: number, item: any) {
+		return item.id;
+	}
+
+	// /** Retorna a descrição da orcamento selecionado ou texto padrão */
+	// getOrcamentoDescricaoSelecionado(): string {
+	// 	const m = this.orcamentos.find(x => x.id === this.buscaId);
+	// 	return m ? m.descricao : 'Nenhum selecionado';
+	// }
+
+	/** Retorna o nome do usuário selecionado ou texto padrão */
+	getUsuarioNome(): string {
+		const u = this.usuarios.find(x => x.id === this.usuarioId);
+		return u ? u.nome : 'Nenhum usuário selecionado';
+	}
+
+	/** Retorna o nome da categoria selecionada ou texto padrão */
+	getCategoriaNome(): string {
+		const c = this.categorias.find(x => x.id === this.categoriaId);
+		return c ? c.nomeCategoria : 'Nenhuma categoria selecionada';
+	}
+
+	deletar(id: number): void {
+		this.swal.confirmar('Deseja excluir esta orcamento?').then(res => {
+			if (res.isConfirmed) {
+				this.orcamentoService.deleteById(id).subscribe({
+					next: () => {
+						this.swal.sucesso('Orcamento excluída!');
+						this.listOrcamentos();
+					},
+					error: err => this.handler.tratarErro(err)
+				});
+			}
 		});
 	}
 }

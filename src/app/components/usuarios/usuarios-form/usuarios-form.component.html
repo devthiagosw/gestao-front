@@ -1,6 +1,6 @@
 <div class="modern-modal">
   <div class="modal-header">
-    <h2>{{ usuario.id ? "Editar Usuario" : "Novo Usuario" }}</h2>
+    <h2>{{ usuario.id ? "Editar Usuário" : "Novo Usuário" }}</h2>
     <button mat-icon-button (click)="onClose()" aria-label="Fechar">
       <mat-icon>X</mat-icon>
     </button>
@@ -8,50 +8,72 @@
 
   <form class="modal-form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
+      <!-- Nome -->
       <div class="form-item">
+        <label class="form-label">Nome</label>
         <input
-          placeholder="Nome"
+          type="text"
+          class="form-control"
+          placeholder="Digite o nome"
           [(ngModel)]="usuario.nome"
           name="nome"
           required
         />
       </div>
 
+      <!-- Email -->
       <div class="form-item">
+        <label class="form-label">Email</label>
         <input
-          placeholder="Email"
-          type="text"
+          type="email"
+          class="form-control"
+          placeholder="Digite o email"
           [(ngModel)]="usuario.email"
           name="email"
           required
         />
       </div>
 
+      <!-- Senha -->
       <div class="form-item">
+        <label class="form-label">Senha</label>
         <input
-          placeholder="Senha"
           type="text"
+          class="form-control"
+          placeholder="Digite a senha"
           [(ngModel)]="usuario.senha"
           name="senha"
           required
         />
       </div>
 
+      <!-- Status -->
       <div class="form-item">
-        <mat-form-field appearance="fill" class="custom-mat-field">
-          <mat-label>Status</mat-label>
-          <mat-select [(ngModel)]="usuario.status" name="status" required>
-            <mat-option value="ATIVO">Ativo</mat-option>
-            <mat-option value="INATIVO">Inativo</mat-option>
-            <mat-option value="BLOQUEADO">Bloqueado</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <label class="form-label">Status</label>
+        <select
+          class="form-select"
+          [(ngModel)]="usuario.status"
+          name="status"
+          required
+        >
+          <option value="ATIVO">Ativo</option>
+          <option value="INATIVO">Inativo</option>
+          <option value="BLOQUEADO">Bloqueado</option>
+        </select>
       </div>
     </div>
-    <!-- Closing the form-grid div -->
+
+    <!-- Botões -->
     <div class="footer-actions">
       <button class="rounded-button" type="submit">
         {{ usuario.id ? "Atualizar" : "Salvar" }}
+      </button>
+      <button
+        class="rounded-button btn-secondary"
+        type="button"
+        (click)="onClose()"
+      >
+        Cancelar
       </button>
     </div>
   </form>
