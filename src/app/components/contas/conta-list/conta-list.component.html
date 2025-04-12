@@ -9,14 +9,14 @@
       
         <div class="card-body">
         <div class="direita">
-          <button type="button" class="btn btn-success btn-rounded" (click)="openModal()">Novo</button>
+          <button type="button" class="btn-NovoModal" (click)="openModal()">Nova Conta</button>
           </div>
           <!-- Modal -->
               <div *ngIf="showModal" class="modal-overlay">
                 <div class="modal-content">
                   <app-conta-form
                     [conta]="contaForm"
-                    (submitConta)="handleFormSubmit($event)"
+                    (formSubmit)="handleFormSubmit($event)"
                     (close)="closeModal()"
                   ></app-conta-form>
                 </div>
@@ -46,8 +46,8 @@
                         <td> {{ c.dataCriacao  }}</td>
                         <td> {{ c.status }}</td>
                         <td>
-                          <button type="button" class="btn btn-warning btn-sm" (click)="openModal(c)">Editar</button>
-                          <button type="button" class="btn btn-danger btn-sm" (click)="deleteConta(c.id)">Excluir</button>
+                          <button type="button" class="btn-Editar" (click)="openModal(c)">Editar</button>
+                          <button type="button" class="btn-Excluir" (click)="deleteConta(c.id)">Excluir</button>
                       </td>
                       </tr>
                     </tbody>

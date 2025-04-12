@@ -17,7 +17,7 @@ import { GlobalHandlerService } from '../../../services/global-handler.service';
 })
 export class ContasListComponent implements OnInit {
   conta: Conta[] = [];
-  contaForm: Conta = this.novaConta();
+  contaForm: Conta = new Conta();
   buscaId: number | null = null;
   usuarioId: number | null = null;
   contaEncontrada: Conta | null = null;
@@ -42,7 +42,6 @@ export class ContasListComponent implements OnInit {
       nomeConta: "",
       tipoConta: "",
       saldoInicial: 0,
-      dataCriacao: "",
       status: ""
     };
   }
@@ -64,7 +63,16 @@ export class ContasListComponent implements OnInit {
   }
 
   openModal(conta?: Conta): void {
-    this.contaForm = conta ? { ...conta } : this.novaConta();
+    if (conta) {
+      this.contaForm = { ...conta };
+    } else {
+      this.contaForm = new Conta();
+      this.contaForm.usuario = {id: 1}; 
+      this.contaForm.nomeConta = "Conta Padrao";
+      this.contaForm.tipoConta = "CORRENTE";
+      this.contaForm.saldoInicial = 0;
+      this.contaForm.status = "ATIVA";
+    }
     this.showModal = true;
   }
 
@@ -82,6 +90,7 @@ export class ContasListComponent implements OnInit {
   }
 
   saveConta(conta: Conta): void {
+    console.log(conta);
     this.contaService.save(conta).subscribe({
       next: () => {
         this.swal.sucesso('Conta criada com sucesso!');

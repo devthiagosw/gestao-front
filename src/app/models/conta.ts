@@ -1,9 +1,9 @@
 export class Conta {
   id!: number;
-  usuario?: { id: number; };
+  usuario!: { id: number; };
   nomeConta!: string;
   tipoConta!: string;
   saldoInicial!: number;
-  dataCriacao!: string; // Pode ser string ou Date
+  dataCriacao?: string;
   status!: string;
 }

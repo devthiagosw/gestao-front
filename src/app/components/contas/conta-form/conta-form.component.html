@@ -1,35 +1,89 @@
-<div class="modal-header">
-  <h2>{{ conta.id ? 'Editar conta' : 'Nova conta' }}</h2>
-  <button class="close-btn" (click)="onClose()">×</button>
-</div>
-<form (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label>Usuário ID:</label>
-    <input type="number" [(ngModel)]="conta.usuario.id" name="usuarioId" required>
+<form class="p-4" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label class="form-label">Usuário</label>
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        class="form-control"
+        [value]="getUsuarioSelecionado()?.nome || 'Nenhum selecionado'"
+        readonly
+      />
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalUsuario(modalUsuario)"
+      >
+        Selecionar
+      </button>
+    </div>
   </div>
-  <div class="form-group">
-    <label>Descrição:</label>
-    <input type="text" [(ngModel)]="conta.nomeConta" name="NomeConta" required>
+
+  <div class="mb-3">
+    <label class="form-label">Nome da Conta</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="conta.nomeConta"
+      name="nomeConta"
+      required
+    />
   </div>
-  <div class="form-group">
-    <label>Valor Objetivo:</label>
-    <input type="number" [(ngModel)]="conta.tipoConta" name="TipoConta" required>
+
+  <div class="mb-3">
+    <label class="form-label">Tipo da Conta</label>
+    <select class="form-control" [(ngModel)]="conta.tipoConta" name="tipoConta" required>
+      <option value="CORRENTE">Corrente</option>
+      <option value="POUPANCA">Poupança</option>
+      <option value="INVESTIMENTO">Investimento</option>
+    </select>
   </div>
-  <div class="form-group">
-    <label>Valor Atual:</label>
-    <input type="number" [(ngModel)]="conta.saldoInicial" name="SaldoInicial" required>
+
+  <div class="mb-3">
+    <label class="form-label">Saldo Inicial</label>
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="conta.saldoInicial"
+      name="saldoInicial"
+      required
+    />
   </div>
-  <div class="form-group">
-    <label>Data Início:</label>
-    <input type="date" [(ngModel)]="conta.dataCriacao" name="DataCriacao" required>
-  </div>
-  <div class="form-group">
-    <label>Status:</label>
-    <input type="text" [(ngModel)]="conta.status" name="status" required>
-  </div>
-  <div class="form-actions">
-    <button type="submit" class="btn-save">{{ conta.id ? 'Atualizar' : 'Salvar' }}</button>
-    <button type="button" (click)="onClose()" class="btn-cancel">Cancelar</button>
+
+  @if (conta.id > 0) {
+    <div class="mb-3">
+      <label class="form-label">Status</label>
+      <select class="form-control" [(ngModel)]="conta.status" name="status" required>
+        <option value="ATIVA">Ativa</option>
+        <option value="INATIVA">Inativa</option>
+        <option value="BLOQUEADA">Bloqueada</option>
+      </select>
+    </div>
+  }
+
+  <div class="text-end">
+    <button type="submit" class="btn btn-success">
+      {{ conta.id ? 'Atualizar' : 'Salvar' }}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="onClose()">
+      Cancelar
+    </button>
   </div>
 </form>
 
+<ng-template #modalUsuario let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Usuário</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let u of usuarios; trackBy: trackById"
+        (click)="selecionarUsuario(u)"
+      >
+        {{ u.nome }}
+      </li>
+    </ul>
+  </div>
+</ng-template>
