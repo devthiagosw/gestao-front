@@ -55,7 +55,7 @@ export class MetasListComponent implements OnInit {
     private handler: GlobalHandlerService,
     private swal: SwalService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.listMetas();

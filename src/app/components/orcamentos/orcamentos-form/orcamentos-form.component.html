@@ -1,84 +1,125 @@
-<div class="modern-modal">
-  <div class="modal-header">
-    <h2>{{ orcamento.id ? "Editar Orcamento" : "Novo Orcamento" }}</h2>
-    <button mat-icon-button (click)="onClose()" aria-label="Fechar">
-      <mat-icon>X</mat-icon>
-    </button>
-  </div>
+<form class="p-4" (ngSubmit)="onSubmit()">
+  <!-- Cabeçalho -->
+  <p *ngIf="orcamento.dataCriacao">
+    Data de início: {{ orcamento.dataCriacao | date : "shortDate" }}
+  </p>
 
-  <form class="modal-form" (ngSubmit)="onSubmit()">
-    <div class="form-grid">
-      <!-- Lado esquerdo -->
-      <div class="left">
-        <div class="form-item">
-          <input
-            placeholder="Categoria"
-            [(ngModel)]="orcamento.categoria.id"
-            name="categoria"
-            required
-          />
-        </div>
-
-        <div class="form-item">
-          <input
-            type="date"
-            [(ngModel)]="orcamento.dataCriacao"
-            name="dataCriacao"
-            required
-          />
-        </div>
-
-        <div class="form-item">
-          <input
-            type="number"
-            [(ngModel)]="orcamento.valorLimite"
-            name="valorLimite"
-            required
-          />
-        </div>
-
-        <div class="form-item">
-          <mat-form-field appearance="fill" class="custom-mat-field">
-            <mat-label>Período</mat-label>
-            <mat-select [(ngModel)]="orcamento.periodo" name="periodo" required>
-              <mat-option value="DIARIA">Diária</mat-option>
-              <mat-option value="SEMANAL">Semanal</mat-option>
-              <mat-option value="MENSAL">Mensal</mat-option>
-              <mat-option value="ANUAL">Anual</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <!-- Lado direito -->
-      <div class="right">
-        <div class="form-item">
-          <span class="label">Valor Limite</span>
-          <input
-            type="number"
-            [(ngModel)]="orcamento.valorLimite"
-            name="valorLimite"
-            class="input-currency"
-            placeholder="0.00"
-          />
-        </div>
-
-        <div class="form-item">
-          <span class="label">ID Usuário</span>
-          <input
-            type="number"
-            [(ngModel)]="orcamento.usuario.id"
-            name="usuarioId"
-            placeholder="Digite o ID"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-actions">
-      <button class="rounded-button" type="submit">
-        {{ orcamento.id ? "Atualizar" : "Salvar" }}
+  <!-- Usuário -->
+  <div class="mb-3">
+    <label class="form-label">Usuário</label>
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        class="form-control"
+        [value]="getUsuarioSelecionado()?.nome || 'Nenhum usuário selecionado'"
+        readonly
+      />
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalUsuario(modalUsuario)"
+      >
+        Selecionar
       </button>
     </div>
-  </form>
-</div>
+  </div>
+
+  <!-- Categoria -->
+  <div class="mb-3">
+    <label class="form-label">Categoria</label>
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        class="form-control"
+        [value]="
+          getCategoriaSelecionada()?.nomeCategoria ||
+          'Nenhuma categoria selecionada'
+        "
+        readonly
+      />
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalCategoria(modalCategoria)"
+      >
+        Selecionar
+      </button>
+    </div>
+  </div>
+
+  <!-- Valor Limite com máscara -->
+  <div class="mb-3">
+    <label class="form-label">Valor Limite</label>
+    <input
+      currencyMask
+      class="form-control"
+      [(ngModel)]="orcamento.valorLimite"
+      name="valorLimite"
+      required
+    />
+  </div>
+
+  <!-- Período -->
+  <div class="mb-3">
+    <label class="form-label">Período</label>
+    <select
+      class="form-select"
+      [(ngModel)]="orcamento.periodo"
+      name="periodo"
+      required
+    >
+      <option value="DIARIO">Por Dia</option>
+      <option value="SEMANAL">Por Semana</option>
+      <option value="MENSAL">Por Mês</option>
+      <option value="ANUAL">Por Ano</option>
+    </select>
+  </div>
+
+  <!-- Botões -->
+  <div class="text-end">
+    <button type="submit" class="btn btn-success">
+      {{ orcamento.id ? "Atualizar" : "Salvar" }}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="onClose()">
+      Cancelar
+    </button>
+  </div>
+</form>
+
+<!-- Modal de Seleção de Usuário -->
+<ng-template #modalUsuario let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Usuário</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let u of usuarios; trackBy: trackById"
+        (click)="selecionarUsuario(u)"
+      >
+        {{ u.nome }}
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<!-- Modal de Seleção de Categoria -->
+<ng-template #modalCategoria let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Categoria</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let c of categorias; trackBy: trackById"
+        (click)="selecionarCategoria(c)"
+      >
+        {{ c.nomeCategoria }}
+      </li>
+    </ul>
+  </div>
+</ng-template>

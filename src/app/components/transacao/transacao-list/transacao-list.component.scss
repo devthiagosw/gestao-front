@@ -1,4 +1,4 @@
-.usuarios-container {
+.transacoes-container {
   max-width: 90%;
   margin: 0 auto;
   padding: 24px;
@@ -172,13 +172,13 @@ table[mat-table] tr:nth-child(even) {
   color: #101728;
 }
 
-.usuario-info p,
-.usuario-card p {
+.transacaoinfo p,
+.transacaocard p {
   margin: 4px 0;
   font-size: 0.95rem;
 }
 
-.usuario-card {
+.transacaocard {
   background: #f5f5f5;
   border-radius: 10px;
   padding: 16px;
