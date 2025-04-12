@@ -1,11 +1,7 @@
-.metas-container {
+.orcamentos-container {
   max-width: 90%;
   margin: 0 auto;
   padding: 24px;
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
 }
 
 .search-section {
@@ -51,7 +47,6 @@
   background-color: #1e2c40;
 }
 
-
 .search-card {
   padding: 16px;
   display: flex;
@@ -81,12 +76,8 @@ table[mat-table] td {
 table[mat-table] th {
   background-color: #101728;
   color: #fff;
-  text-align: center;
+  text-align: left;
 }
-
-table[mat-table] td {
-    text-align: center;
-  }
 
 table[mat-table] tr:nth-child(even) {
   background-color: #f2f2f2;
@@ -113,7 +104,7 @@ table[mat-table] tr:nth-child(even) {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -156,7 +147,8 @@ table[mat-table] tr:nth-child(even) {
   color: #d32f2f;
 }
 
-.result-card, .result-list {
+.result-card,
+.result-list {
   background: #f5f5f5;
   padding: 20px;
   border-radius: 12px;
@@ -172,13 +164,13 @@ table[mat-table] tr:nth-child(even) {
   color: #101728;
 }
 
-.meta-info p,
-.meta-card p {
+.orcamentos-info p,
+.orcamentos-card p {
   margin: 4px 0;
   font-size: 0.95rem;
 }
 
-.meta-card {
+.orcamentos-card {
   background: #f5f5f5;
   border-radius: 10px;
   padding: 16px;
@@ -203,7 +195,8 @@ table[mat-table] tr:nth-child(even) {
   flex-wrap: wrap;
 }
 
-.result-card, .result-list {
+.result-card,
+.result-list {
   flex: 1;
   min-width: 280px;
   background: #f5f5f5;
@@ -211,5 +204,3 @@ table[mat-table] tr:nth-child(even) {
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
-
-

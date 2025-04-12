@@ -1,0 +1,84 @@
+<div class="modern-modal">
+  <div class="modal-header">
+    <h2>{{ orcamento.id ? "Editar Orcamento" : "Novo Orcamento" }}</h2>
+    <button mat-icon-button (click)="onClose()" aria-label="Fechar">
+      <mat-icon>X</mat-icon>
+    </button>
+  </div>
+
+  <form class="modal-form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <!-- Lado esquerdo -->
+      <div class="left">
+        <div class="form-item">
+          <input
+            placeholder="Categoria"
+            [(ngModel)]="orcamento.categoria.id"
+            name="categoria"
+            required
+          />
+        </div>
+
+        <div class="form-item">
+          <input
+            type="date"
+            [(ngModel)]="orcamento.dataCriacao"
+            name="dataCriacao"
+            required
+          />
+        </div>
+
+        <div class="form-item">
+          <input
+            type="number"
+            [(ngModel)]="orcamento.valorLimite"
+            name="valorLimite"
+            required
+          />
+        </div>
+
+        <div class="form-item">
+          <mat-form-field appearance="fill" class="custom-mat-field">
+            <mat-label>Período</mat-label>
+            <mat-select [(ngModel)]="orcamento.periodo" name="periodo" required>
+              <mat-option value="DIARIA">Diária</mat-option>
+              <mat-option value="SEMANAL">Semanal</mat-option>
+              <mat-option value="MENSAL">Mensal</mat-option>
+              <mat-option value="ANUAL">Anual</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Lado direito -->
+      <div class="right">
+        <div class="form-item">
+          <span class="label">Valor Limite</span>
+          <input
+            type="number"
+            [(ngModel)]="orcamento.valorLimite"
+            name="valorLimite"
+            class="input-currency"
+            placeholder="0.00"
+          />
+        </div>
+
+        <div class="form-item">
+          <span class="label">ID Usuário</span>
+          <input
+            type="number"
+            [(ngModel)]="orcamento.usuario.id"
+            name="usuarioId"
+            placeholder="Digite o ID"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-actions">
+      <button class="rounded-button" type="submit">
+        {{ orcamento.id ? "Atualizar" : "Salvar" }}
+      </button>
+    </div>
+  </form>
+</div>

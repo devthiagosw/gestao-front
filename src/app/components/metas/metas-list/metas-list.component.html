@@ -1,4 +1,5 @@
 <div class="metas-container">
+  <h2>Metas</h2>
   <button class="btn-novo" (click)="openModal()">Nova Meta</button>
 
   <!-- Busca por ID -->
@@ -34,11 +35,11 @@
     <!-- Busca por metas em andamento -->
     <section class="search-section">
       <div class="search-box">
-        <input
-          type="number"
-          placeholder="ID do Usuário"
-          [(ngModel)]="usuarioId"
-        />
+        <select [(ngModel)]="usuarioId">
+          <option *ngFor="let user of usuarios" [value]="user.id">
+            {{ user.nome }}
+          </option>
+        </select>        
         <button class="search-button" (click)="searchMetasEmAndamento()">
           Buscar
         </button>

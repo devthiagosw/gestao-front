@@ -4,28 +4,31 @@ import { PrincipalComponent } from './components/layout/principal/principal.comp
 import { MetasListComponent } from './components/metas/metas-list/metas-list.component';
 import { ContasListComponent } from './components/contas/conta-list/conta-list.component';
 import { CategoriasListComponent } from './components/categorias/categorias-list/categorias-list.component';
-import { OrcamentosComponent } from './components/orcamentos/orcamentos.component';
-import { TagsComponent } from './components/tags/tags.component';
+import { OrcamentosListComponent } from './components/orcamentos/orcamentos-list/orcamentos-list.component';
 import { TransacaoComponent } from './components/transacao/transacao.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { UsuariosListComponent } from './components/usuarios/usuarios-list/usuarios-list.component';
+import { TagsListComponent } from './components/tags/tags-list/tags-list.component';
 
 export const routes: Routes = [
-    { path: "login", component: LoginComponent },
-    { path: "", redirectTo: "login", pathMatch: "full" },
-    {
-      path: "admin",
-      component: PrincipalComponent,
-      children: [
-        { path: "dashboard", component: DashboardComponent  },
-        { path: "app-metas", component: MetasListComponent },
-        {path:"conta", component: ContasListComponent},
-        { path: 'categorias', component: CategoriasListComponent },
-        { path: "orcamentos", component: OrcamentosComponent },
-        { path: "tags", component: TagsComponent },
-        { path: "transacao", component: TransacaoComponent },
-        
-      ]
-    },
-    // wildcard DEPOIS das demais rotas
-    // { path: "**", redirectTo: "login", pathMatch: "full" }
-  ];
+
+  { path: "login", component: LoginComponent },
+  { path: "", redirectTo: "login", pathMatch: "full" },
+  {
+    path: "admin",
+    component: PrincipalComponent,
+    children: [
+      { path: "dashboard", component: DashboardComponent },
+      { path: "app-metas", component: MetasListComponent },
+      { path: "conta", component: ContasListComponent },
+      { path: "orcamentos", component: OrcamentosListComponent },
+      { path: "tags", component: TagsListComponent },
+      { path: "transacao", component: TransacaoComponent },
+      { path: 'categorias', component: CategoriasListComponent },
+      { path: "usuarios", component: UsuariosListComponent },
+    ]
+  },
+  // wildcard DEPOIS das demais rotas
+  // { path: "**", redirectTo: "login", pathMatch: "full" }
+];
+

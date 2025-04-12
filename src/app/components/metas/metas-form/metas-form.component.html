@@ -1,6 +1,6 @@
 <div class="modern-modal">
   <div class="modal-header">
-    <h2>{{ meta.id ? 'Editar Meta' : 'Nova Meta' }}</h2>
+    <h2>{{ meta.id ? "Editar Meta" : "Nova Meta" }}</h2>
     <button mat-icon-button (click)="onClose()" aria-label="Fechar">
       <mat-icon>X</mat-icon>
     </button>
@@ -11,19 +11,39 @@
       <!-- Lado esquerdo -->
       <div class="left">
         <div class="form-item">
-          <input placeholder="Descrição" [(ngModel)]="meta.descricao" name="descricao" required />
+          <input
+            placeholder="Descrição"
+            [(ngModel)]="meta.descricao"
+            name="descricao"
+            required
+          />
         </div>
 
         <div class="form-item">
-          <input type="date" [(ngModel)]="meta.dataInicio" name="dataInicio" required />
+          <input
+            type="date"
+            [(ngModel)]="meta.dataInicio"
+            name="dataInicio"
+            required
+          />
         </div>
 
         <div class="form-item">
-          <input type="date" [(ngModel)]="meta.dataTermino" name="dataTermino" required />
+          <input
+            type="date"
+            [(ngModel)]="meta.dataTermino"
+            name="dataTermino"
+            required
+          />
         </div>
 
         <div class="form-item">
-          <input placeholder="Status" [(ngModel)]="meta.status" name="status" required />
+          <input
+            placeholder="Status"
+            [(ngModel)]="meta.status"
+            name="status"
+            required
+          />
         </div>
       </div>
 
@@ -40,7 +60,7 @@
             placeholder="0.00"
           />
         </div>
-      
+
         <!-- Valor Atual -->
         <div class="form-item">
           <span class="label">Valor atual</span>
@@ -52,22 +72,32 @@
             placeholder="0.00"
           />
         </div>
-      
-        <!-- ID Usuário -->
-        <div class="form-item">
-          <span class="label">ID Usuário</span>
-          <input
-            type="number"
-            [(ngModel)]="meta.usuario.id"
-            name="usuarioId"
-            placeholder="Digite o ID"
-          />
+
+        <!-- Seleção de Usuário -->
+        <div class="form-item no-flex">
+          <mat-form-field appearance="fill" class="native-select-styled full-width">
+            <mat-label>Usuário</mat-label>
+            <select
+              matNativeControl
+              [(ngModel)]="meta.usuario.id"
+              name="usuarioId"
+              required
+            >
+              <option value="" disabled>Selecione um usuário</option>
+              <option *ngFor="let user of usuarios" [value]="user.id">
+                {{ user.nome }}
+              </option>
+            </select>
+          </mat-form-field>
         </div>
+        
       </div>
-    </div>      
+    </div>
 
     <div class="footer-actions">
-      <button class="rounded-button" type="submit">{{ meta.id ? 'Atualizar' : 'Salvar' }}</button>
+      <button class="rounded-button" type="submit">
+        {{ meta.id ? "Atualizar" : "Salvar" }}
+      </button>
     </div>
   </form>
 </div>
