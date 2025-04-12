@@ -43,4 +43,8 @@ export class ContaService {
   deleteById(id: number): Observable<string> {
     return this.http.delete<string>(`${this.API}/${id}`, { responseType: 'text' as 'json' });
   }
+  // Retorna as contas de um usuário específico
+  getContasPorUsuario(usuarioId: number): Observable<Conta[]> {
+    return this.http.get<Conta[]>(`${this.API}/usuario/${usuarioId}`);
+  }
 }
