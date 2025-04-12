@@ -8,15 +8,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card'; // <-- Nova importação
+import { MatCardModule } from '@angular/material/card';
 import { MetasFormComponent } from '../metas-form/metas-form.component';
 import { MetaService } from '../../../services/metas.service';
 import { UsuarioService } from '../../../services/usuarios.service';
+import Swal from 'sweetalert2';
 
 @Component({
-	selector: 'app-metas-list',
-	standalone: true,
-	imports: [
+  selector: 'app-metas-list',
+  standalone: true,
+  imports: [
     CommonModule,
     FormsModule,
     MatTableModule,
@@ -24,139 +25,186 @@ import { UsuarioService } from '../../../services/usuarios.service';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCardModule, // <-- Adicionado
-    MetasFormComponent,
-    
+    MatCardModule,
+    MetasFormComponent
   ],
-	templateUrl: './metas-list.component.html',
-	styleUrls: ['./metas-list.component.scss']
+  templateUrl: './metas-list.component.html',
+  styleUrls: ['./metas-list.component.scss']
 })
 export class MetasListComponent implements OnInit {
-	metas: Meta[] = [];
-	metaForm: Meta = {
-		usuario: { id: 0 },
-		descricao: '',
-		valorObjetivo: 0,
-		valorAtual: 0,
-		dataInicio: '',
-		dataTermino: '',
-		status: ''
-	};
-	showModal: boolean = false;
-	displayedColumns: string[] = ['id', 'descricao', 'valorObjetivo', 'valorAtual', 'dataInicio', 'dataTermino', 'status', 'actions'];
+  metas: Meta[] = [];
+  metaForm: Meta = {
+    usuario: { id: 0 },
+    descricao: '',
+    valorObjetivo: 0,
+    valorAtual: 0,
+    dataInicio: '',
+    dataTermino: '',
+    status: ''
+  };
+  showModal: boolean = false;
+  displayedColumns: string[] = ['id', 'descricao', 'valorObjetivo', 'valorAtual', 'dataInicio', 'dataTermino', 'status', 'actions'];
 
-	// NOVAS PROPRIEDADES DE BUSCA
-	buscaId: number | null = null;
-	usuarioId: number | null = null;
-	metaEncontrada: Meta | null = null;
-	metasEmAndamento: Meta[] = [];
+  buscaId: number | null = null;
+  usuarioId: number | null = null;
+  metaEncontrada: Meta | null = null;
+  metasEmAndamento: Meta[] = [];
   usuarios: any[] = [];
 
-	constructor(private metaService: MetaService, private usuarioService: UsuarioService) {}
+  constructor(private metaService: MetaService, private usuarioService: UsuarioService) {}
 
-
-	ngOnInit(): void {
+  ngOnInit(): void {
     this.listMetas();
-    this.loadUsuarios(); // 👈 Aqui!
+    this.loadUsuarios();
+  }
+
+  getErrorMessage(err: any): string {
+    if (err.status === 400 && err.error && typeof err.error === 'object') {
+      const errors = Object.values(err.error);
+      return errors.length > 0 ? errors.join('\n') : 'Erro de validação.';
+    }
+    return err.error?.message || err.message || 'Erro inesperado';
   }
 
   loadUsuarios(): void {
     this.usuarioService.findAll().subscribe({
       next: (data) => this.usuarios = data,
-      error: (err) => console.error('Erro ao carregar usuários:', err)
+      error: (err) => {
+        Swal.fire({
+          title: 'Erro ao carregar usuários',
+          text: this.getErrorMessage(err),
+          icon: 'error'
+        });
+      }
     });
   }
-  
 
-	listMetas(): void {
-		this.metaService.findAll().subscribe({
-			next: (data) => this.metas = data,
-			error: (err) => console.error('Erro:', err)
-		});
-	}
+  listMetas(): void {
+    this.metaService.findAll().subscribe({
+      next: (data) => this.metas = data,
+      error: (err) => {
+        Swal.fire({
+          title: 'Erro ao listar metas',
+          text: this.getErrorMessage(err),
+          icon: 'error'
+        });
+      }
+    });
+  }
 
-	// NOVOS MÉTODOS DE BUSCA
-	getMetaById(): void {
-		if (this.buscaId !== null) {
-			this.metaService.findById(this.buscaId).subscribe({
-				next: (data) => {
-					this.metaEncontrada = data;
-					console.log('Meta encontrada:', data);
-				},
-				error: (err) => console.error('Erro ao buscar meta por ID:', err)
-			});
-		}
-	}
+  getMetaById(): void {
+    if (this.buscaId !== null) {
+      this.metaService.findById(this.buscaId).subscribe({
+        next: (data) => this.metaEncontrada = data,
+        error: (err) => {
+          Swal.fire({
+            title: 'Erro ao buscar meta por ID',
+            text: this.getErrorMessage(err),
+            icon: 'error'
+          });
+        }
+      });
+    }
+  }
 
-	searchMetasEmAndamento(): void {
-		if (this.usuarioId !== null) {
-			this.metaService.buscarMetasEmAndamento(this.usuarioId).subscribe({
-				next: (data) => {
-					this.metasEmAndamento = data;
-					console.log('Metas em Andamento:', data);
-				},
-				error: (err) => console.error('Erro ao buscar metas em andamento:', err)
-			});
-		}
-	}
+  searchMetasEmAndamento(): void {
+    if (this.usuarioId !== null) {
+      this.metaService.buscarMetasEmAndamento(this.usuarioId).subscribe({
+        next: (data) => this.metasEmAndamento = data,
+        error: (err) => {
+          Swal.fire({
+            title: 'Erro ao buscar metas em andamento',
+            text: this.getErrorMessage(err),
+            icon: 'error'
+          });
+        }
+      });
+    }
+  }
 
-	openModal(meta?: Meta): void {
-		if(meta) {
-			this.metaForm = { ...meta };
-		} else {
-			this.metaForm = {
-				usuario: { id: 0 },
-				descricao: '',
-				valorObjetivo: 0,
-				valorAtual: 0,
-				dataInicio: '',
-				dataTermino: '',
-				status: ''
-			};
-		}
-		this.showModal = true;
-	}
+  openModal(meta?: Meta): void {
+    this.metaForm = meta ? { ...meta } : {
+      usuario: { id: 0 },
+      descricao: '',
+      valorObjetivo: 0,
+      valorAtual: 0,
+      dataInicio: '',
+      dataTermino: '',
+      status: ''
+    };
+    this.showModal = true;
+  }
 
-	closeModal(): void {
-		this.showModal = false;
-	}
+  closeModal(): void {
+    this.showModal = false;
+  }
 
-	handleFormSubmit(meta: Meta): void {
-		if(meta.id) {
-			this.updateMeta(meta.id, meta);
-		} else {
-			this.saveMeta(meta);
-		}
-		this.closeModal();
-	}
+  handleFormSubmit(meta: Meta): void {
+    if (meta.id) {
+      this.updateMeta(meta.id, meta);
+    } else {
+      this.saveMeta(meta);
+    }
+    this.closeModal();
+  }
 
-	saveMeta(meta: Meta): void {
-		this.metaService.save(meta).subscribe({
-			next: (res) => {
-				console.log('Meta salva:', res);
-				this.listMetas();
-			},
-			error: (err) => console.error('Erro ao salvar:', err)
-		});
-	}
+  saveMeta(meta: Meta): void {
+    this.metaService.save(meta).subscribe({
+      next: () => {
+        Swal.fire({
+          title: 'Sucesso',
+          text: 'Meta criada com sucesso!',
+          icon: 'success'
+        });
+        this.listMetas();
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Erro ao salvar',
+          text: this.getErrorMessage(err),
+          icon: 'error'
+        });
+      }
+    });
+  }
 
-	updateMeta(id: number, meta: Meta): void {
-		this.metaService.update(meta, id).subscribe({
-			next: (res) => {
-				console.log('Meta atualizada:', res);
-				this.listMetas();
-			},
-			error: (err) => console.error('Erro ao atualizar:', err)
-		});
-	}
+  updateMeta(id: number, meta: Meta): void {
+    this.metaService.update(meta, id).subscribe({
+      next: () => {
+        Swal.fire({
+          title: 'Atualizado',
+          text: 'Meta atualizada com sucesso!',
+          icon: 'success'
+        });
+        this.listMetas();
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Erro ao atualizar',
+          text: this.getErrorMessage(err),
+          icon: 'error'
+        });
+      }
+    });
+  }
 
-	deleteMeta(id: number): void {
-		this.metaService.deleteById(id).subscribe({
-			next: (res) => {
-				console.log('Meta excluída:', res);
-				this.listMetas();
-			},
-			error: (err) => console.error('Erro ao excluir:', err)
-		});
-	}
+  deleteMeta(id: number): void {
+    this.metaService.deleteById(id).subscribe({
+      next: () => {
+        Swal.fire({
+          title: 'Meta excluída',
+          text: 'A meta foi removida com sucesso.',
+          icon: 'success'
+        });
+        this.listMetas();
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Erro ao excluir',
+          text: this.getErrorMessage(err),
+          icon: 'error'
+        });
+      }
+    });
+  }
 }

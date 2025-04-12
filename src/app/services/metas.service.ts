@@ -30,17 +30,17 @@ export class MetaService {
   }
 
   // Salva uma nova meta enviando o objeto completo, incluindo "usuario"
-  save(meta: Meta): Observable<string> {
-    return this.http.post<string>(this.API, meta, { responseType: 'text' as 'json' });
+  save(meta: Meta): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(this.API, meta);
   }
 
   // Atualiza uma meta existente
-  update(meta: Meta, id: number): Observable<string> {
-    return this.http.put<string>(`${this.API}/${id}`, meta, { responseType: 'text' as 'json' });
+  update(meta: Meta, id: number): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${this.API}/${id}`, meta);
   }
 
   // Exclui uma meta pelo ID
-  deleteById(id: number): Observable<string> {
-    return this.http.delete<string>(`${this.API}/${id}`, { responseType: 'text' as 'json' });
+  deleteById(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.API}/${id}`);
   }
 }
