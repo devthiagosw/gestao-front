@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Categoria } from '../../../models/categoria';
 import { CategoriaService } from '../../../services/categoria.service';
-import { SwalService } from '../../../services/swal.service';
-import { GlobalHandlerService } from '../../../services/global-handler.service';
 import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CategoriasFormComponent } from '../categorias-form/categorias-form.component';
 import { CommonModule } from '@angular/common';
+import { SwalService } from '../../../services/swal.service';
+import { GlobalHandlerService } from '../../../services/global-handler.service';
 
 @Component({
   selector: 'app-categorias-list',
   standalone: true,
-  imports: [CommonModule, NgbModalModule, CategoriasFormComponent],
+  imports: [CommonModule, NgbModalModule],
   templateUrl: './categorias-list.component.html',
   styleUrls: ['./categorias-list.component.scss']
 })

@@ -1,14 +1,17 @@
+import { UsuarioService } from './../../../services/usuarios.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Categoria } from '../../../models/categoria';
 import { CategoriaService } from '../../../services/categoria.service';
 import { TipoCategoria } from '../../../enums/tipo-categoria';
 import { Usuario } from '../../../models/usuario';
-import { UsuarioService } from '../../../services/usuario.service';
-import { SwalService } from '../../../services/swal.service';
-import { GlobalHandlerService } from '../../../services/global-handler.service';
+
+
+
 import { NgbModal, NgbModalRef, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
+import { GlobalHandlerService } from '../../../services/global-handler.service';
+import { SwalService } from '../../../services/swal.service';
 
 @Component({
   selector: 'app-categoria-form',
@@ -27,7 +30,7 @@ export class CategoriasFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: CategoriaService,
-    private usuarioService: UsuarioService,
+    private UsuarioService: UsuarioService,
     private swal: SwalService,
     private handler: GlobalHandlerService,
     private modalService: NgbModal // ✅ injetado aqui!
@@ -48,7 +51,7 @@ export class CategoriasFormComponent implements OnInit {
   }
 
   carregarUsuarios(): void {
-    this.usuarioService.findAll().subscribe({
+    this.UsuarioService.findAll().subscribe({
       next: (res) => this.usuarios = res,
       error: (err) => this.handler.tratarErro(err)
     });
