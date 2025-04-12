@@ -1,31 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { CommonModule, NgIf, NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Tag } from '../../../models/tag';
-
+import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { TagService } from '../../../services/tag.service';
-import { TagsFormComponent } from '../tags-form/tags-form.component';
 
-import Swal from 'sweetalert2';
+import { Tag } from '../../../models/tag';
+import { TagService } from '../../../services/tag.service';
+import { GlobalHandlerService } from '../../../services/global-handler.service';
+import { SwalService } from '../../../services/swal.service';
+import { TagsFormComponent } from '../tags-form/tags-form.component';
 
 @Component({
   selector: 'app-tags-list',
   standalone: true,
   imports: [
     CommonModule,
+    NgIf,
+    NgForOf,
     FormsModule,
+    NgbModalModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
     TagsFormComponent
   ],
   templateUrl: './tags-list.component.html',
@@ -33,138 +31,98 @@ import Swal from 'sweetalert2';
 })
 export class TagsListComponent implements OnInit {
   tags: Tag[] = [];
-  displayedColumns: string[] = ['id', 'nome', 'actions'];
-  
-  tagForm: Tag = { nome: '' };
-  showModal: boolean = false;
-
   buscaId: number | null = null;
   tagEncontrada: Tag | null = null;
 
-  constructor(private tagService: TagService) {}
+  displayedColumns = ['id', 'nome', 'actions'];
+
+  @ViewChild('modalSelecionarTag') modalSelecionarTagTpl!: TemplateRef<any>;
+  private selecionarTagRef!: NgbModalRef;
+  private formModalRef!: NgbModalRef;
+
+  constructor(
+    private tagService: TagService,
+    private handler: GlobalHandlerService,
+    private swal: SwalService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     this.listTags();
   }
 
-  getErrorMessage(err: any): string {
-    if (err.status === 0) {
-      return 'Erro de conexão com o servidor.';
-    }
-  
-    // Trata retorno com JSON
-    if (err.status === 400 && err.error && typeof err.error === 'object') {
-      const errors = Object.values(err.error);
-      return errors.length > 0 ? errors.join('\n') : 'Erro de validação.';
-    }
-  
-    // Trata retorno com texto simples
-    if (typeof err.error === 'string') {
-      return err.error;
-    }
-  
-    return err.message || 'Erro inesperado.';
-  }
-  
-
   listTags(): void {
     this.tagService.findAll().subscribe({
-      next: (data) => this.tags = data,
-      error: (err) => {
-        Swal.fire({
-          title: 'Erro ao listar tags',
-          text: this.getErrorMessage(err),
-          icon: 'error'
-        });
-      }
+      next: data => this.tags = data,
+      error: err => this.handler.tratarErro(err)
     });
   }
 
   getTagById(): void {
     if (this.buscaId !== null) {
       this.tagService.findById(this.buscaId).subscribe({
-        next: (data) => {
-          this.tagEncontrada = data;
-        },
-        error: (err) => {
-          Swal.fire({
-            title: 'Erro ao buscar tag',
-            text: this.getErrorMessage(err),
-            icon: 'error'
-          });
-        }
+        next: data => this.tagEncontrada = data,
+        error: err => this.handler.tratarErro(err)
       });
     }
   }
 
   openModal(tag?: Tag): void {
-    this.tagForm = tag ? { ...tag } : { nome: '' };
-    this.showModal = true;
-  }
-
-  closeModal(): void {
-    this.showModal = false;
-  }
-
-  handleFormSubmit(tag: Tag): void {
-    if(tag.id) {
-      this.tagService.update(tag.id, tag).subscribe({
-        next: () => {
-          Swal.fire({
-            title: 'Atualizado!',
-            text: 'Tag atualizada com sucesso!',
-            icon: 'success'
-          });
-          this.listTags();
-        },
-        error: (err) => {
-          Swal.fire({
-            title: 'Erro ao atualizar tag',
-            text: this.getErrorMessage(err),
-            icon: 'error'
-          });
-        }
-      });
-    } else {
-      this.tagService.create(tag).subscribe({
-        next: () => {
-          Swal.fire({
-            title: 'Criada!',
-            text: 'Tag criada com sucesso!',
-            icon: 'success'
-          });
-          this.listTags();
-        },
-        error: (err) => {
-          Swal.fire({
-            title: 'Erro ao criar tag',
-            text: this.getErrorMessage(err),
-            icon: 'error'
-          });
-        }
-      });
-    }
-
-    this.closeModal();
+    this.formModalRef = this.modalService.open(TagsFormComponent, { size: 'lg' });
+    this.formModalRef.componentInstance.tag = tag ? { ...tag } : { nome: '' };
+    this.formModalRef.componentInstance.submitTag.subscribe((t: Tag) => {
+      if (t.id) {
+        this.tagService.update(t.id, t).subscribe({
+          next: () => {
+            this.swal.sucesso('Tag atualizada com sucesso!');
+            this.listTags();
+          },
+          error: err => this.handler.tratarErro(err)
+        });
+      } else {
+        this.tagService.create(t).subscribe({
+          next: () => {
+            this.swal.sucesso('Tag criada com sucesso!');
+            this.listTags();
+          },
+          error: err => this.handler.tratarErro(err)
+        });
+      }
+      this.formModalRef.close();
+    });
+    this.formModalRef.componentInstance.close.subscribe(() => this.formModalRef.close());
   }
 
   deleteTag(id: number): void {
-    this.tagService.deleteById(id).subscribe({
-      next: () => {
-        Swal.fire({
-          title: 'Tag excluída!',
-          text: 'A tag foi removida com sucesso.',
-          icon: 'success'
-        });
-        this.listTags();
-      },
-      error: (err) => {
-        Swal.fire({
-          title: 'Erro ao excluir tag',
-          text: this.getErrorMessage(err),
-          icon: 'error'
+    this.swal.confirmar('Tem certeza que deseja excluir esta tag?').then(res => {
+      if (res.isConfirmed) {
+        this.tagService.deleteById(id).subscribe({
+          next: () => {
+            this.swal.sucesso('Tag excluída com sucesso!');
+            this.listTags();
+          },
+          error: err => this.handler.tratarErro(err)
         });
       }
     });
+  }
+
+  abrirModalSelecionarTag(): void {
+    this.selecionarTagRef = this.modalService.open(this.modalSelecionarTagTpl, { size: 'md' });
+  }
+
+  selecionarTag(t: Tag): void {
+    this.buscaId = t.id!;
+    this.selecionarTagRef.close();
+  }
+
+  /** Exibe o nome da tag selecionada ou texto padrão */
+  getTagNomeSelecionada(): string {
+    const t = this.tags.find(x => x.id === this.buscaId);
+    return t ? t.nome : 'Nenhum selecionado';
+  }
+
+  trackById(_: number, item: Tag) {
+    return item.id;
   }
 }
