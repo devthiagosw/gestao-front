@@ -12,7 +12,7 @@ export class GlobalHandlerService {
 
     // Se for erro do backend (HttpErrorResponse)
     if (error instanceof HttpErrorResponse) {
-      msg = error.error; error.message;  'Erro ao se comunicar com o servidor';
+      msg = error.error?.message || error.error || error.message || 'Erro ao se comunicar com o servidor';
     }
 
     // Mostra com Swal

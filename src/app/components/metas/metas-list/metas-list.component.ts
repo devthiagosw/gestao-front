@@ -1,108 +1,86 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { CommonModule, NgIf, NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Meta } from '../../../models/metas';
-
+import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MetasFormComponent } from '../metas-form/metas-form.component';
+
+import { Meta } from '../../../models/metas';
 import { MetaService } from '../../../services/metas.service';
 import { UsuarioService } from '../../../services/usuarios.service';
-import Swal from 'sweetalert2';
+import { GlobalHandlerService } from '../../../services/global-handler.service';
+import { SwalService } from '../../../services/swal.service';
+import { MetasFormComponent } from '../metas-form/metas-form.component';
 
 @Component({
   selector: 'app-metas-list',
   standalone: true,
   imports: [
     CommonModule,
+    NgIf,
+    NgForOf,
     FormsModule,
+    NgbModalModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MetasFormComponent
   ],
   templateUrl: './metas-list.component.html',
   styleUrls: ['./metas-list.component.scss']
 })
 export class MetasListComponent implements OnInit {
   metas: Meta[] = [];
-  metaForm: Meta = {
-    usuario: { id: 0 },
-    descricao: '',
-    valorObjetivo: 0,
-    valorAtual: 0,
-    dataInicio: '',
-    dataTermino: '',
-    status: ''
-  };
-  showModal: boolean = false;
-  displayedColumns: string[] = ['id', 'descricao', 'valorObjetivo', 'valorAtual', 'dataInicio', 'dataTermino', 'status', 'actions'];
-
+  usuarios: any[] = [];
   buscaId: number | null = null;
   usuarioId: number | null = null;
   metaEncontrada: Meta | null = null;
   metasEmAndamento: Meta[] = [];
-  usuarios: any[] = [];
 
-  constructor(private metaService: MetaService, private usuarioService: UsuarioService) {}
+  displayedColumns = [
+    'id', 'descricao', 'valorObjetivo', 'valorAtual',
+    'dataInicio', 'dataTermino', 'status', 'actions'
+  ];
+
+  @ViewChild('modalUsuario') modalUsuarioTpl!: TemplateRef<any>;
+  @ViewChild('modalSelecionarMeta') modalSelecionarMetaTpl!: TemplateRef<any>;
+
+  private usuarioModalRef!: NgbModalRef;
+  private selecionarMetaRef!: NgbModalRef;
+  private formModalRef!: NgbModalRef;
+
+  constructor(
+    private metaService: MetaService,
+    private usuarioService: UsuarioService,
+    private handler: GlobalHandlerService,
+    private swal: SwalService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     this.listMetas();
     this.loadUsuarios();
   }
 
-  getErrorMessage(err: any): string {
-    if (err.status === 400 && err.error && typeof err.error === 'object') {
-      const errors = Object.values(err.error);
-      return errors.length > 0 ? errors.join('\n') : 'Erro de validação.';
-    }
-    return err.error?.message || err.message || 'Erro inesperado';
+  listMetas(): void {
+    this.metaService.findAll().subscribe({
+      next: data => this.metas = data,
+      error: err => this.handler.tratarErro(err)
+    });
   }
 
   loadUsuarios(): void {
     this.usuarioService.findAll().subscribe({
-      next: (data) => this.usuarios = data,
-      error: (err) => {
-        Swal.fire({
-          title: 'Erro ao carregar usuários',
-          text: this.getErrorMessage(err),
-          icon: 'error'
-        });
-      }
-    });
-  }
-
-  listMetas(): void {
-    this.metaService.findAll().subscribe({
-      next: (data) => this.metas = data,
-      error: (err) => {
-        Swal.fire({
-          title: 'Erro ao listar metas',
-          text: this.getErrorMessage(err),
-          icon: 'error'
-        });
-      }
+      next: data => this.usuarios = data,
+      error: err => this.handler.tratarErro(err)
     });
   }
 
   getMetaById(): void {
     if (this.buscaId !== null) {
       this.metaService.findById(this.buscaId).subscribe({
-        next: (data) => this.metaEncontrada = data,
-        error: (err) => {
-          Swal.fire({
-            title: 'Erro ao buscar meta por ID',
-            text: this.getErrorMessage(err),
-            icon: 'error'
-          });
-        }
+        next: data => this.metaEncontrada = data,
+        error: err => this.handler.tratarErro(err)
       });
     }
   }
@@ -110,99 +88,83 @@ export class MetasListComponent implements OnInit {
   searchMetasEmAndamento(): void {
     if (this.usuarioId !== null) {
       this.metaService.buscarMetasEmAndamento(this.usuarioId).subscribe({
-        next: (data) => this.metasEmAndamento = data,
-        error: (err) => {
-          Swal.fire({
-            title: 'Erro ao buscar metas em andamento',
-            text: this.getErrorMessage(err),
-            icon: 'error'
-          });
-        }
+        next: data => this.metasEmAndamento = data,
+        error: err => this.handler.tratarErro(err)
       });
     }
   }
 
-  openModal(meta?: Meta): void {
-    this.metaForm = meta ? { ...meta } : {
-      usuario: { id: 0 },
-      descricao: '',
-      valorObjetivo: 0,
-      valorAtual: 0,
-      dataInicio: '',
-      dataTermino: '',
-      status: ''
-    };
-    this.showModal = true;
-  }
-
-  closeModal(): void {
-    this.showModal = false;
-  }
-
-  handleFormSubmit(meta: Meta): void {
-    if (meta.id) {
-      this.updateMeta(meta.id, meta);
-    } else {
-      this.saveMeta(meta);
+  abrirModalFormulario(meta?: Meta): void {
+    this.formModalRef = this.modalService.open(MetasFormComponent, { size: 'lg' });
+    if (meta) {
+      this.formModalRef.componentInstance.meta = { ...meta };
     }
-    this.closeModal();
-  }
+    this.formModalRef.componentInstance.usuarios = this.usuarios;
 
-  saveMeta(meta: Meta): void {
-    this.metaService.save(meta).subscribe({
-      next: () => {
-        Swal.fire({
-          title: 'Sucesso',
-          text: 'Meta criada com sucesso!',
-          icon: 'success'
-        });
-        this.listMetas();
-      },
-      error: (err) => {
-        Swal.fire({
-          title: 'Erro ao salvar',
-          text: this.getErrorMessage(err),
-          icon: 'error'
-        });
-      }
+    this.formModalRef.componentInstance.submitMeta.subscribe((m: Meta) => {
+      const action = m.id
+        ? this.metaService.update(m, m.id!)
+        : this.metaService.save(m);
+
+      action.subscribe({
+        next: () => {
+          this.swal.sucesso(m.id ? 'Meta atualizada!' : 'Meta criada!');
+          this.listMetas();
+        },
+        error: err => this.handler.tratarErro(err)
+      });
+
+      this.formModalRef.close();
+    });
+
+    this.formModalRef.componentInstance.close.subscribe(() => {
+      this.formModalRef.close();
     });
   }
 
-  updateMeta(id: number, meta: Meta): void {
-    this.metaService.update(meta, id).subscribe({
-      next: () => {
-        Swal.fire({
-          title: 'Atualizado',
-          text: 'Meta atualizada com sucesso!',
-          icon: 'success'
-        });
-        this.listMetas();
-      },
-      error: (err) => {
-        Swal.fire({
-          title: 'Erro ao atualizar',
-          text: this.getErrorMessage(err),
-          icon: 'error'
-        });
-      }
-    });
+  abrirModalUsuario(): void {
+    this.usuarioModalRef = this.modalService.open(this.modalUsuarioTpl, { size: 'md' });
   }
 
-  deleteMeta(id: number): void {
-    this.metaService.deleteById(id).subscribe({
-      next: () => {
-        Swal.fire({
-          title: 'Meta excluída',
-          text: 'A meta foi removida com sucesso.',
-          icon: 'success'
-        });
-        this.listMetas();
-      },
-      error: (err) => {
-        Swal.fire({
-          title: 'Erro ao excluir',
-          text: this.getErrorMessage(err),
-          icon: 'error'
+  selecionarUsuario(u: any): void {
+    this.usuarioId = u.id;
+    this.usuarioModalRef.close();
+  }
+
+  abrirModalSelecionarMeta(): void {
+    this.selecionarMetaRef = this.modalService.open(this.modalSelecionarMetaTpl, { size: 'md' });
+  }
+
+  selecionarMeta(m: Meta): void {
+    this.buscaId = m.id!;
+    this.selecionarMetaRef.close();
+  }
+
+  trackById(_: number, item: any) {
+    return item.id;
+  }
+
+  /** Retorna a descrição da meta selecionada ou texto padrão */
+  getMetaDescricaoSelecionada(): string {
+    const m = this.metas.find(x => x.id === this.buscaId);
+    return m ? m.descricao : 'Nenhum selecionado';
+  }
+
+  /** Retorna o nome do usuário selecionado ou texto padrão */
+  getUsuarioNome(): string {
+    const u = this.usuarios.find(x => x.id === this.usuarioId);
+    return u ? u.nome : 'Nenhum selecionado';
+  }
+
+  deletar(id: number): void {
+    this.swal.confirmar('Deseja excluir esta meta?').then(res => {
+      if (res.isConfirmed) {
+        this.metaService.deleteById(id).subscribe({
+          next: () => {
+            this.swal.sucesso('Meta excluída!');
+            this.listMetas();
+          },
+          error: err => this.handler.tratarErro(err)
         });
       }
     });

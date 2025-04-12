@@ -1,31 +1,20 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Meta } from '../../../models/metas';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
-import { UsuarioService } from '../../../services/usuarios.service';
 import { Usuario } from '../../../models/usuario';
-
+import { UsuarioService } from '../../../services/usuarios.service';
+import { GlobalHandlerService } from '../../../services/global-handler.service';
+import { SwalService } from '../../../services/swal.service';
+import { NgbModal, NgbModalRef, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-metas-form',
   standalone: true,
   imports: [
-    FormsModule,
     CommonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule
+    FormsModule,
+    NgbModalModule
   ],
   templateUrl: './metas-form.component.html',
   styleUrls: ['./metas-form.component.scss']
@@ -36,17 +25,66 @@ export class MetasFormComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   usuarios: Usuario[] = [];
+  modalRef?: NgbModalRef;
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private handler: GlobalHandlerService,
+    private swal: SwalService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
+    // Se não veio meta (nova), inicializa objeto padrão
+    if (!this.meta) {
+      this.meta = {
+        usuario: { id: 0 },
+        descricao: '',
+        valorObjetivo: 0,
+        valorAtual: 0,
+        dataInicio: '',
+        dataTermino: '',
+        status: ''
+      };
+    }
+
+    
+
     this.usuarioService.findAll().subscribe({
-      next: (data) => this.usuarios = data,
-      error: (err) => console.error('Erro ao carregar usuários:', err)
+      next: (res) => this.usuarios = res,
+      error: (err) => this.handler.tratarErro(err)
     });
   }
 
+  trackById(index: number, item: Usuario) {
+    return item.id;
+  }
+
+  abrirModalUsuario(template: any): void {
+    this.modalRef = this.modalService.open(template, { size: 'md' });
+  }
+
+  selecionarUsuario(usuario: Usuario): void {
+    if (usuario.id !== undefined) {
+      this.meta.usuario = { id: usuario.id };
+      this.modalRef?.close();
+    }
+  }
+
+  getUsuarioSelecionado(): Usuario | undefined {
+    return this.usuarios.find(u => u.id === this.meta.usuario.id);
+  }
+
   onSubmit(): void {
+    // validação mínima
+    if (!this.meta.descricao.trim()) {
+      this.swal.aviso('A descrição é obrigatória.');
+      return;
+    }
+    if (!this.meta.usuario.id) {
+      this.swal.aviso('Selecione um usuário.');
+      return;
+    }
     this.submitMeta.emit(this.meta);
   }
 

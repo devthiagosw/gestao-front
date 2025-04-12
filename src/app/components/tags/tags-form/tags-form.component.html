@@ -1,27 +1,28 @@
 <div class="modern-modal">
-    <div class="modal-header">
-      <h2>{{ tag.id ? 'Editar Tag' : 'Nova Tag' }}</h2>
-      <button mat-icon-button (click)="onClose()" aria-label="Fechar">
-        <mat-icon>X</mat-icon>
+  <div class="modal-header">
+    <h2>{{ tag.id ? 'Editar Tag' : 'Nova Tag' }}</h2>
+    <button mat-icon-button (click)="onClose()" aria-label="Fechar">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="modal-form p-4">
+    <div class="mb-3">
+      <label class="form-label">Nome da Tag</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="tag.nome"
+        name="nome"
+        required
+        placeholder="Nome da Tag"
+      />
+    </div>
+
+    <div class="text-end">
+      <button class="btn btn-success" type="submit">
+        {{ tag.id ? 'Atualizar' : 'Criar' }}
       </button>
     </div>
-  
-    <form (ngSubmit)="onSubmit()" class="modal-form">
-      <div class="form-grid single">
-        <div class="form-item">
-          <input
-            type="text"
-            [(ngModel)]="tag.nome"
-            name="nome"
-            required
-            placeholder="Nome da Tag"
-          />
-        </div>
-      </div>
-  
-      <div class="footer-actions">
-        <button class="rounded-button" type="submit">{{ tag.id ? 'Atualizar' : 'Criar' }}</button>
-      </div>
-    </form>
-  </div>
-  
+  </form>
+</div>
