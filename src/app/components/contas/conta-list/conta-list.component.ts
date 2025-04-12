@@ -60,7 +60,7 @@ export class ContasListComponent implements OnInit {
       this.contaForm = { ...conta };
     } else {
       this.contaForm = new Conta();
-      this.contaForm.usuario = {id: 1};
+      this.contaForm.usuario = {id: 1}; 
       this.contaForm.nomeConta = "Conta Padrao";
       this.contaForm.tipoConta = "CORRENTE";
       this.contaForm.saldoInicial = 0;

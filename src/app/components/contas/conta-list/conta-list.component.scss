@@ -26,3 +26,35 @@ h3{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
   
+  .btn-NovoModal{
+    background-color: #101728;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+  .btn-Editar{
+    background-color: #101728;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin-right: 3px;
+  }
+  .btn-Excluir{
+     background-color: #101728;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin-right: -40px;
+  }
