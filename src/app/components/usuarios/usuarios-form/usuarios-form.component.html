@@ -1,0 +1,58 @@
+<div class="modern-modal">
+  <div class="modal-header">
+    <h2>{{ usuario.id ? "Editar Usuario" : "Novo Usuario" }}</h2>
+    <button mat-icon-button (click)="onClose()" aria-label="Fechar">
+      <mat-icon>X</mat-icon>
+    </button>
+  </div>
+
+  <form class="modal-form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <div class="form-item">
+        <input
+          placeholder="Nome"
+          [(ngModel)]="usuario.nome"
+          name="nome"
+          required
+        />
+      </div>
+
+      <div class="form-item">
+        <input
+          placeholder="Email"
+          type="text"
+          [(ngModel)]="usuario.email"
+          name="email"
+          required
+        />
+      </div>
+
+      <div class="form-item">
+        <input
+          placeholder="Senha"
+          type="text"
+          [(ngModel)]="usuario.senha"
+          name="senha"
+          required
+        />
+      </div>
+
+      <div class="form-item">
+        <mat-form-field appearance="fill" class="custom-mat-field">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="usuario.status" name="status" required>
+            <mat-option value="ATIVO">Ativo</mat-option>
+            <mat-option value="INATIVO">Inativo</mat-option>
+            <mat-option value="BLOQUEADO">Bloqueado</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Closing the form-grid div -->
+    <div class="footer-actions">
+      <button class="rounded-button" type="submit">
+        {{ usuario.id ? "Atualizar" : "Salvar" }}
+      </button>
+    </div>
+  </form>
+</div>

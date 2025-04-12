@@ -1,142 +1,183 @@
 <div class="metas-container">
-  <button class="btn-novo" (click)="openModal()">Nova Meta</button>
+  <h2>Metas</h2>
+  <button class="btn-novo" (click)="abrirModalFormulario()">Nova Meta</button>
 
-  <!-- Busca por ID -->
   <div class="result-flex">
+    <!-- Busca por ID com seletor via modal -->
     <section class="search-section">
       <div class="search-box">
-        <input type="number" placeholder="ID da Meta" [(ngModel)]="buscaId" />
+        <input
+          type="text"
+          class="form-control"
+          [value]="getMetaDescricaoSelecionada()"
+          readonly
+        />
+        <button class="btn btn-outline-primary" (click)="abrirModalSelecionarMeta()">
+          Selecionar Meta
+        </button>
         <button class="search-button" (click)="getMetaById()">Buscar</button>
       </div>
     </section>
 
     <!-- Resultado da busca por ID -->
-    <div class="result-card" *ngIf="metaEncontrada">
-      <h3>Meta encontrada</h3>
-      <div class="meta-info">
-        <p><strong>Descrição:</strong> {{ metaEncontrada.descricao }}</p>
-        <p>
-          <strong>Valor Objetivo:</strong>
-          {{ metaEncontrada.valorObjetivo | currency }}
-        </p>
-        <p>
-          <strong>Valor Atual:</strong>
-          {{ metaEncontrada.valorAtual | currency }}
-        </p>
-        <p>
-          <strong>Status:</strong>
-          <span class="status-chip">{{ metaEncontrada.status }}</span>
-        </p>
-        <p><strong>Usuário:</strong> {{ metaEncontrada.usuario.id }}</p>
+    @if (metaEncontrada) {
+      <div class="result-card">
+        <h3>Meta encontrada</h3>
+        <div class="meta-info">
+          <p><strong>Descrição:</strong> {{ metaEncontrada.descricao }}</p>
+          <p>
+            <strong>Objetivo:</strong>
+            {{ metaEncontrada.valorObjetivo | currency:'BRL':'symbol':'1.2-2' }}
+          </p>
+          <p>
+            <strong>Atual:</strong>
+            {{ metaEncontrada.valorAtual | currency:'BRL':'symbol':'1.2-2' }}
+          </p>
+          <p>
+            <strong>Status:</strong>
+            <span class="status-chip">{{ metaEncontrada.status }}</span>
+          </p>
+          <p><strong>Usuário:</strong> {{ metaEncontrada.usuario.id }}</p>
+        </div>
       </div>
-    </div>
+    }
 
     <!-- Busca por metas em andamento -->
     <section class="search-section">
       <div class="search-box">
         <input
-          type="number"
-          placeholder="ID do Usuário"
-          [(ngModel)]="usuarioId"
+          type="text"
+          class="form-control"
+          [value]="getUsuarioNome()"
+          readonly
         />
-        <button class="search-button" (click)="searchMetasEmAndamento()">
-          Buscar
+        <button class="btn btn-outline-primary" (click)="abrirModalUsuario()">
+          Selecionar Usuário
         </button>
+        <button class="search-button" (click)="searchMetasEmAndamento()">Buscar</button>
       </div>
     </section>
 
     <!-- Resultado da busca em andamento -->
-    <div class="result-list" *ngIf="metasEmAndamento?.length">
-      <h3>Metas em Andamento</h3>
-      <div class="meta-card" *ngFor="let m of metasEmAndamento">
-        <p>
-          <strong>{{ m.descricao }}</strong>
-        </p>
-        <p>
-          Objetivo: {{ m.valorObjetivo | currency }} | Atual:
-          {{ m.valorAtual | currency }}
-        </p>
-        <p>
-          Status: <span class="status-chip">{{ m.status }}</span>
-        </p>
+    @if (metasEmAndamento.length > 0) {
+      <div class="result-list">
+        <h3>Metas em Andamento</h3>
+        @for (m of metasEmAndamento; track m.id) {
+          <div class="meta-card">
+            <p><strong>{{ m.descricao }}</strong></p>
+            <p>
+              Objetivo:
+              {{ m.valorObjetivo | currency:'BRL':'symbol':'1.2-2' }}
+              |
+              Atual:
+              {{ m.valorAtual | currency:'BRL':'symbol':'1.2-2' }}
+            </p>
+            <p>
+              Status:
+              <span class="status-chip">{{ m.status }}</span>
+            </p>
+          </div>
+        }
       </div>
-    </div>
+    }
   </div>
+
   <!-- Tabela -->
-  <table
-    mat-table
-    [dataSource]="metas"
-    class="mat-elevation-z8"
-    *ngIf="metas?.length"
-  >
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>ID</th>
-      <td mat-cell *matCellDef="let meta">{{ meta.id }}</td>
-    </ng-container>
+  @if (metas.length > 0) {
+    <table mat-table [dataSource]="metas" class="mat-elevation-z8">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let meta">{{ meta.id }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="descricao">
-      <th mat-header-cell *matHeaderCellDef>Descrição</th>
-      <td mat-cell *matCellDef="let meta">{{ meta.descricao }}</td>
-    </ng-container>
+      <ng-container matColumnDef="descricao">
+        <th mat-header-cell *matHeaderCellDef>Descrição</th>
+        <td mat-cell *matCellDef="let meta">{{ meta.descricao }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="valorObjetivo">
-      <th mat-header-cell *matHeaderCellDef>Objetivo</th>
-      <td mat-cell *matCellDef="let meta">
-        {{ meta.valorObjetivo | currency }}
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="valorObjetivo">
+        <th mat-header-cell *matHeaderCellDef>Objetivo</th>
+        <td mat-cell *matCellDef="let meta">
+          {{ meta.valorObjetivo | currency:'BRL':'symbol':'1.2-2' }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="valorAtual">
-      <th mat-header-cell *matHeaderCellDef>Atual</th>
-      <td mat-cell *matCellDef="let meta">{{ meta.valorAtual | currency }}</td>
-    </ng-container>
+      <ng-container matColumnDef="valorAtual">
+        <th mat-header-cell *matHeaderCellDef>Atual</th>
+        <td mat-cell *matCellDef="let meta">
+          {{ meta.valorAtual | currency:'BRL':'symbol':'1.2-2' }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="dataInicio">
-      <th mat-header-cell *matHeaderCellDef>Início</th>
-      <td mat-cell *matCellDef="let meta">{{ meta.dataInicio | date }}</td>
-    </ng-container>
+      <ng-container matColumnDef="dataInicio">
+        <th mat-header-cell *matHeaderCellDef>Início</th>
+        <td mat-cell *matCellDef="let meta">{{ meta.dataInicio | date }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="dataTermino">
-      <th mat-header-cell *matHeaderCellDef>Término</th>
-      <td mat-cell *matCellDef="let meta">{{ meta.dataTermino | date }}</td>
-    </ng-container>
+      <ng-container matColumnDef="dataTermino">
+        <th mat-header-cell *matHeaderCellDef>Término</th>
+        <td mat-cell *matCellDef="let meta">{{ meta.dataTermino | date }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let meta">{{ meta.status }}</td>
-    </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let meta">{{ meta.status }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td mat-cell *matCellDef="let meta">
-        <div class="action-buttons">
-          <button class="icon-button" (click)="openModal(meta)" title="Editar">
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let meta">
+          <button mat-icon-button (click)="abrirModalFormulario(meta)">
             <mat-icon>✏️</mat-icon>
           </button>
-          <button
-            class="icon-button danger"
-            (click)="deleteMeta(meta.id)"
-            title="Excluir"
-          >
+          <button mat-icon-button color="warn" (click)="deletar(meta.id!)">
             <mat-icon>🗑️</mat-icon>
           </button>
-        </div>
-      </td>
-    </ng-container>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  }
 
-  <!-- Modal -->
-  <div class="modal-overlay" *ngIf="showModal">
-    <div class="modal-content">
-      <app-metas-form
-        [meta]="metaForm"
-        (submitMeta)="handleFormSubmit($event)"
-        (close)="closeModal()"
-      >
-      </app-metas-form>
+  <!-- Modal de Seleção de Meta -->
+  <ng-template #modalSelecionarMeta let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Selecionar Meta</h5>
+      <button type="button" class="btn-close" (click)="modal.close()"></button>
     </div>
-  </div>
+    <div class="modal-body p-0">
+      <ul class="list-group list-group-flush">
+        @for (m of metas; track m.id) {
+          <li
+            class="list-group-item list-group-item-action"
+            (click)="selecionarMeta(m)"
+          >
+            {{ m.descricao }}
+          </li>
+        }
+      </ul>
+    </div>
+  </ng-template>
+
+  <!-- Modal de Seleção de Usuário -->
+  <ng-template #modalUsuario let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Selecionar Usuário</h5>
+      <button type="button" class="btn-close" (click)="modal.close()"></button>
+    </div>
+    <div class="modal-body p-0">
+      <ul class="list-group list-group-flush">
+        @for (u of usuarios; track u.id) {
+          <li
+            class="list-group-item list-group-item-action"
+            (click)="selecionarUsuario(u)"
+          >
+            {{ u.nome }}
+          </li>
+        }
+      </ul>
+    </div>
+  </ng-template>
 </div>

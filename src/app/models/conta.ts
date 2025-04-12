@@ -4,6 +4,6 @@ export class Conta {
   nomeConta!: string;
   tipoConta!: string;
   saldoInicial!: number;
-  dataCriacao!: Date;
+  dataCriacao?: string ;
   status!: string;
 }

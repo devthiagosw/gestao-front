@@ -1,0 +1,142 @@
+<div class="usuarios-container">
+  <button class="btn-novo" (click)="openModal()">Novo Usuario</button>
+
+  <!-- Busca por ID -->
+  <div class="result-flex">
+    <section class="search-section">
+      <div class="search-box">
+        <input
+          type="number"
+          placeholder="ID da Usuario"
+          [(ngModel)]="buscaId"
+        />
+        <button class="search-button" (click)="getUsuarioById()">Buscar</button>
+      </div>
+    </section>
+
+    <!-- Resultado da busca por ID -->
+    <div class="result-card" *ngIf="usuarioEncontrado">
+      <h3>Usuario Encontrado</h3>
+      <div class="usuario-info">
+        <p><strong>Nome:</strong> {{ usuarioEncontrado.nome }}</p>
+        <p>
+          <strong>Email:</strong>
+          {{ usuarioEncontrado.email }}
+        </p>
+        <p>
+          <strong>Senha:</strong>
+          {{ usuarioEncontrado.senha }}
+        </p>
+        <p>
+          <strong>Status:</strong>
+          <span class="status-chip">{{ usuarioEncontrado.status }}</span>
+        </p>
+        <p>
+          <strong>Data Criação:</strong> {{ usuarioEncontrado.dataCriacao }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Busca por usuarios em andamento -->
+    <section class="search-section">
+      <div class="search-box">
+        <input
+          type="number"
+          placeholder="ID do Usuário"
+          [(ngModel)]="usuarioId"
+        />
+        <button class="search-button" (click)="searchUsuariosPorNome()">
+          Buscar
+        </button>
+      </div>
+    </section>
+
+    <!-- Resultado da busca por usuário -->
+    <div class="result-list" *ngIf="usuariosPorNome?.length">
+      <h3>Usuarios Por Usuário Encontrados</h3>
+      <div class="usuario-card" *ngFor="let u of usuariosPorNome">
+        <p>
+          <strong> Usuário ID ---/> {{ u.nome }}</strong>
+          <!-- Alterado para exibir o ID do usuário -->
+        </p>
+        <p>Email: {{ u.email }}</p>
+        <p>
+          Senha:
+          {{ u.senha }}
+        </p>
+        <p>
+          Status: <span class="status-chip">{{ u.status }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Tabela -->
+  <table mat-table [dataSource]="usuarios" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="senha">
+      <th mat-header-cell *matHeaderCellDef>Senha</th>
+      <td mat-cell *matCellDef="let element">{{ element.senha }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dataCriacao">
+      <th mat-header-cell *matHeaderCellDef>Data Criação</th>
+      <td mat-cell *matCellDef="let element">{{ element.dataCriacao }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let usuario">
+        <div class="action-buttons">
+          <button
+            class="icon-button"
+            (click)="openModal(usuario)"
+            title="Editar"
+          >
+            <mat-icon>✏️</mat-icon>
+          </button>
+          <button
+            class="icon-button danger"
+            (click)="deleteUsuario(usuario.id)"
+            title="Excluir"
+          >
+            <mat-icon>🗑️</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+      <app-usuarios-form
+        [usuario]="usuarioForm"
+        (submitUsuario)="handleFormSubmit($event)"
+        (close)="closeModal()"
+      >
+      </app-usuarios-form>
+    </div>
+  </div>
+</div>

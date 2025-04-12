@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
 import { ContaService } from '../../../services/conta.service';
 import { ContaFormComponent } from '../conta-form/conta-form.component';
 import { Conta } from '../../../models/conta';
-
-
+import { SwalService } from '../../../services/swal.service';
+import { GlobalHandlerService } from '../../../services/global-handler.service';
 
 @Component({
   selector: 'app-conta',
   standalone: true,
-  imports: [FormsModule, CommonModule,ContaFormComponent],
+  imports: [FormsModule, CommonModule, ContaFormComponent],
   templateUrl: './conta-list.component.html',
   styleUrls: ['./conta-list.component.scss']
 })
@@ -22,39 +23,45 @@ export class ContasListComponent implements OnInit {
   contaEncontrada: Conta | null = null;
   contaEmAndamento: Conta[] = [];
 
-  // Novo controle para modal
   showModal: boolean = false;
 
-  constructor(private contaService: ContaService) { }
+  constructor(
+    private contaService: ContaService,
+    private swal: SwalService,
+    private handler: GlobalHandlerService
+  ) {}
 
   ngOnInit(): void {
     this.listContas();
   }
 
+  private novaConta(): Conta {
+    return {
+      id: 0,
+      usuario: { id: 0 },
+      nomeConta: "",
+      tipoConta: "",
+      saldoInicial: 0,
+      status: ""
+    };
+  }
+
   listContas(): void {
     this.contaService.findAll().subscribe({
-      next: (data) => {
-        this.conta = data;
-        console.log('Contas:', data);
-      },
-      error: (err) => console.error('Erro ao consultar conta:', err)
+      next: (data) => this.conta = data,
+      error: (err) => this.handler.tratarErro(err)
     });
   }
 
   getContaById(): void {
-    if(this.buscaId !== null) {
+    if (this.buscaId !== null) {
       this.contaService.findById(this.buscaId).subscribe({
-        next: (data) => {
-          this.contaEncontrada = data;
-          console.log('Conta encontrada:', data);
-        },
-        error: (err) => console.error('Erro ao buscar conta por ID:', err)
+        next: (data) => this.contaEncontrada = data,
+        error: (err) => this.handler.tratarErro(err)
       });
     }
   }
 
- 
-  // Abre o modal para novo cadastro ou para editar, preenchendo o formulário
   openModal(conta?: Conta): void {
     if (conta) {
       this.contaForm = { ...conta };
@@ -85,32 +92,35 @@ export class ContasListComponent implements OnInit {
   saveConta(conta: Conta): void {
     console.log(conta);
     this.contaService.save(conta).subscribe({
-      next: (res) => {
-        console.log('Conta salva:', res);
+      next: () => {
+        this.swal.sucesso('Conta criada com sucesso!');
         this.listContas();
       },
-      error: (err) => console.error('Erro ao salvar conta:', err)
+      error: (err) => this.handler.tratarErro(err)
     });
   }
 
   updateConta(id: number, conta: Conta): void {
     this.contaService.update(conta, id).subscribe({
-      next: (res) => {
-        console.log('Conta atualizada:', res);
+      next: () => {
+        this.swal.sucesso('Conta atualizada com sucesso!');
         this.listContas();
       },
-      error: (err) => console.error('Erro ao atualizar conta:', err)
+      error: (err) => this.handler.tratarErro(err)
     });
   }
 
   deleteConta(id: number): void {
-    this.contaService.deleteById(id).subscribe({
-      next: (res) => {
-        console.log('Conta excluída:', res);
-        this.listContas();
-      },
-      error: (err) => console.error('Erro ao excluir conta:', err)
+    this.swal.confirmar('Tem certeza que deseja excluir esta conta?').then((res) => {
+      if (res.isConfirmed) {
+        this.contaService.deleteById(id).subscribe({
+          next: () => {
+            this.swal.sucesso('Conta excluída com sucesso!');
+            this.listContas();
+          },
+          error: (err) => this.handler.tratarErro(err)
+        });
+      }
     });
   }
 }
-

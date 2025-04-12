@@ -1,73 +1,125 @@
-<div class="modern-modal">
-  <div class="modal-header">
-    <h2>{{ meta.id ? 'Editar Meta' : 'Nova Meta' }}</h2>
-    <button mat-icon-button (click)="onClose()" aria-label="Fechar">
-      <mat-icon>X</mat-icon>
-    </button>
+<form class="p-4" (ngSubmit)="onSubmit()">
+  <!-- Cabeçalho -->
+  <p *ngIf="meta.dataInicio">Data de início: {{ meta.dataInicio | date:'shortDate' }}</p>
+
+  <!-- Usuário -->
+  <div class="mb-3">
+    <label class="form-label">Usuário</label>
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        class="form-control"
+        [value]="getUsuarioSelecionado()?.nome || 'Nenhum selecionado'"
+        readonly
+      />
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="abrirModalUsuario(modalUsuario)"
+      >
+        Selecionar
+      </button>
+    </div>
   </div>
 
-  <form class="modal-form" (ngSubmit)="onSubmit()">
-    <div class="form-grid">
-      <!-- Lado esquerdo -->
-      <div class="left">
-        <div class="form-item">
-          <input placeholder="Descrição" [(ngModel)]="meta.descricao" name="descricao" required />
-        </div>
+  <!-- Descrição -->
+  <div class="mb-3">
+    <label class="form-label">Descrição</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="meta.descricao"
+      name="descricao"
+      required
+    />
+  </div>
 
-        <div class="form-item">
-          <input type="date" [(ngModel)]="meta.dataInicio" name="dataInicio" required />
-        </div>
+  <!-- Valor Objetivo com máscara -->
+  <div class="mb-3">
+    <label class="form-label">Valor Objetivo</label>
+    <input
+      currencyMask
+      class="form-control"
+      [(ngModel)]="meta.valorObjetivo"
+      name="valorObjetivo"
+      required
+    />
+  </div>
 
-        <div class="form-item">
-          <input type="date" [(ngModel)]="meta.dataTermino" name="dataTermino" required />
-        </div>
+  <!-- Valor Atual com máscara -->
+  <div class="mb-3">
+    <label class="form-label">Valor Atual</label>
+    <input
+      currencyMask
+      class="form-control"
+      [(ngModel)]="meta.valorAtual"
+      name="valorAtual"
+      required
+    />
+  </div>
 
-        <div class="form-item">
-          <input placeholder="Status" [(ngModel)]="meta.status" name="status" required />
-        </div>
-      </div>
+  <!-- Data de Início -->
+  <div class="mb-3">
+    <label class="form-label">Data de Início</label>
+    <input
+      type="date"
+      class="form-control"
+      [(ngModel)]="meta.dataInicio"
+      name="dataInicio"
+      required
+    />
+  </div>
 
-      <!-- Lado direito -->
-      <div class="right">
-        <!-- Valor Objetivo -->
-        <div class="form-item">
-          <span class="label">Valor objetivo</span>
-          <input
-            type="number"
-            [(ngModel)]="meta.valorObjetivo"
-            name="valorObjetivo"
-            class="input-currency"
-            placeholder="0.00"
-          />
-        </div>
-      
-        <!-- Valor Atual -->
-        <div class="form-item">
-          <span class="label">Valor atual</span>
-          <input
-            type="number"
-            [(ngModel)]="meta.valorAtual"
-            name="valorAtual"
-            class="input-currency"
-            placeholder="0.00"
-          />
-        </div>
-      
-        <!-- ID Usuário -->
-        <div class="form-item">
-          <span class="label">ID Usuário</span>
-          <input
-            type="number"
-            [(ngModel)]="meta.usuario.id"
-            name="usuarioId"
-            placeholder="Digite o ID"
-          />
-        </div>
-      </div>
-    </div>      
+  <!-- Data de Término -->
+  <div class="mb-3">
+    <label class="form-label">Data de Término</label>
+    <input
+      type="date"
+      class="form-control"
+      [(ngModel)]="meta.dataTermino"
+      name="dataTermino"
+      required
+    />
+  </div>
 
-    <div class="footer-actions">
-      <button class="rounded-button" type="submit">{{ meta.id ? 'Atualizar' : 'Salvar' }}</button>
-    </div>
-  </form>
-</div>
+  <!-- Status -->
+  <div class="mb-3">
+    <label class="form-label">Status</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="meta.status"
+      name="status"
+      required
+    />
+  </div>
+
+  <!-- Botões -->
+  <div class="text-end">
+    <button type="submit" class="btn btn-success">
+      {{ meta.id ? 'Atualizar' : 'Salvar' }}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="onClose()">
+      Cancelar
+    </button>
+  </div>
+</form>
+
+<!-- Modal de Seleção de Usuário -->
+<ng-template #modalUsuario let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Selecionar Usuário</h5>
+    <button type="button" class="btn-close" (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        *ngFor="let u of usuarios; trackBy: trackById"
+        (click)="selecionarUsuario(u)"
+      >
+        {{ u.nome }}
+      </li>
+    </ul>
+  </div>
+</ng-template>
