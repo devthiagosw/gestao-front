@@ -18,8 +18,6 @@ import { MetasFormComponent } from '../metas-form/metas-form.component';
   standalone: true,
   imports: [
     CommonModule,
-    NgIf,
-    NgForOf,
     FormsModule,
     NgbModalModule,
     MatTableModule,
