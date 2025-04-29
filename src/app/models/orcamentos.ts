@@ -1,7 +1,10 @@
+import { Categoria } from "./categoria";
+import { Usuario } from "./usuario";
+
 export class Orcamento {
   id?: number;
-  usuario!: { id: number };
-  categoria!: { id: number };
+  usuario!: Partial<Usuario>;
+  categoria!: Partial<Categoria>
   valorLimite!: number;
   periodo!: string;
   dataCriacao?: string;

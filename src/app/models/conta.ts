@@ -1,6 +1,8 @@
+import { Usuario } from "./usuario";
+
 export class Conta {
   id!: number;
-  usuario!: { id: number; };
+  usuario!: Partial<Usuario>;
   nomeConta!: string;
   tipoConta!: string;
   saldoInicial!: number;
