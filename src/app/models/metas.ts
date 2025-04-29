@@ -1,7 +1,8 @@
+import { Usuario } from "./usuario";
 
 export class Meta {
   id?: number;
-  usuario!: { id: number };
+  usuario!: Partial<Usuario>;
   descricao!: string;
   valorObjetivo!: number;
   valorAtual!: number;
