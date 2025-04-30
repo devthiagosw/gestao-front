@@ -4,21 +4,51 @@
     Nova Transação
   </button>
 
-  <!-- Filtro por Usuário -->
-  <section class="search-section">
-    <div class="search-box">
-      <input
-        type="text"
-        class="form-control"
-        [value]="getUsuarioNome()"
-        readonly
-      />
-      <button class="btn btn-outline-primary" (click)="abrirModalUsuario()">
-        Selecionar Usuário
-      </button>
-      <button class="search-button" (click)="buscarTransacoesPorUsuario()">
-        Buscar
-      </button>
+  <!-- Filtros em layout de colunas uniformes -->
+  <section class="filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" [(ngModel)]="filtro.tipo" (change)="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option value="ENTRADA">Entrada</option>
+          <option value="SAIDA">Saída</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="categoria">Categoria:</label>
+        <select
+          id="categoria"
+          [(ngModel)]="filtro.categoriaId"
+          (change)="aplicarFiltros()"
+        >
+          <option value="">Todas</option>
+          <option *ngFor="let categoria of categorias" [value]="categoria.id">
+            {{ categoria.nomeCategoria }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="conta">Conta:</label>
+        <select
+          id="conta"
+          [(ngModel)]="filtro.contaId"
+          (change)="aplicarFiltros()"
+        >
+          <option value="">Todas</option>
+          <option *ngFor="let conta of contas" [value]="conta.id">
+            {{ conta.nomeConta }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group full-width">
+        <button class="btn-clear" (click)="limparFiltros()">
+          Limpar Filtros
+        </button>
+      </div>
     </div>
   </section>
 

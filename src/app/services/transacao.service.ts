@@ -10,6 +10,25 @@ export class TransacaoService {
   private http = inject(HttpClient);
   private API = 'http://localhost:8080/transacoes';
 
+  // ✅ Nova função para buscar por múltiplos filtros
+  buscarComFiltros(filtro: {
+    tipo?: string;
+    categoriaId?: number;
+    contaId?: number;
+    usuarioId?: number;
+  }): Observable<Transacao[]> {
+    let params = [];
+
+    if (filtro.tipo) params.push(`tipo=${filtro.tipo}`);
+    if (filtro.categoriaId) params.push(`categoriaId=${filtro.categoriaId}`);
+    if (filtro.contaId) params.push(`contaId=${filtro.contaId}`);
+    if (filtro.usuarioId) params.push(`usuarioId=${filtro.usuarioId}`);
+
+    const queryString = params.length ? `?${params.join('&')}` : '';
+
+    return this.http.get<Transacao[]>(`${this.API}/filtro${queryString}`);
+  }
+
   // ✅ Retorna todas as transações
   findAll(): Observable<Transacao[]> {
     return this.http.get<Transacao[]>(this.API);
@@ -30,6 +49,7 @@ export class TransacaoService {
     return this.http.get<Transacao[]>(`${this.API}/categoria/${categoriaId}`);
   }
 
+  // ✅ Retorna transações por usuario
   findByUsuarioId(usuarioId: number): Observable<Transacao[]> {
     return this.http.get<Transacao[]>(`${this.API}/usuarios/${usuarioId}`);
   }
