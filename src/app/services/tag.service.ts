@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TagService {
-  private baseUrl = 'http://localhost:8080/tags'; // ajuste conforme seu back
+  private baseUrl = 'http://localhost:8080/tags';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   findAll(): Observable<Tag[]> {
     return this.http.get<Tag[]>(this.baseUrl);

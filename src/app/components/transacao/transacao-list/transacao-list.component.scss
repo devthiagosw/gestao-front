@@ -212,3 +212,64 @@ table[mat-table] tr:nth-child(even) {
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  background: #c6c6c684;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.filter-group select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.filter-group select:focus {
+  border-color: #101728;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.btn-clear {
+  background-color: #ef3f3c;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.btn-clear:hover {
+  background-color: #c53030;
+}
+
+.filter-group.full-width {
+  grid-column: auto;
+  align-self: end;
+}

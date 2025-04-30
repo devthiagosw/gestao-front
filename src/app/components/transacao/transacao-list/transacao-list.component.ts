@@ -11,6 +11,8 @@ import { TransacaoService } from '../../../services/transacao.service';
 import { GlobalHandlerService } from '../../../services/global-handler.service';
 import { UsuarioService } from '../../../services/usuarios.service';
 import { SwalService } from '../../../services/swal.service';
+import { CategoriaService } from '../../../services/categoria.service';
+import { ContaService } from '../../../services/conta.service';
 
 
 @Component({
@@ -41,17 +43,54 @@ export class TransacaoListComponent {
   private usuarioModalRef!: NgbModalRef;
   private formModalRef!: NgbModalRef;
 
+  filtro = {
+    tipo: '',
+    categoriaId: '' as number | '',
+    contaId: '' as number | '',
+    usuarioId: null as number | null
+  };
+
+
   constructor(
+    private categoriaService: CategoriaService,
+    private contaService: ContaService,
     private usuarioService: UsuarioService,
     private swal: SwalService,
     private transacaoService: TransacaoService,
     private handler: GlobalHandlerService,
     private modalService: NgbModal) { }
 
+  aplicarFiltros(): void {
+    const filtrosConvertidos = {
+      tipo: this.filtro.tipo || undefined,
+      categoriaId: this.filtro.categoriaId ? Number(this.filtro.categoriaId) : undefined,
+      contaId: this.filtro.contaId ? Number(this.filtro.contaId) : undefined,
+      usuarioId: this.filtro.usuarioId ? Number(this.filtro.usuarioId) : undefined
+    };
+
+    this.transacaoService.buscarComFiltros(filtrosConvertidos).subscribe({
+      next: data => this.transacoes = data,
+      error: err => this.handler.tratarErro(err)
+    });
+  }
+
+  limparFiltros(): void {
+    this.filtro = {
+      tipo: '',
+      categoriaId: '',
+      contaId: '',
+      usuarioId: null
+    };
+    this.listTransacoes();
+  }
+
+
 
   ngOnInit(): void {
     this.listTransacoes();
     this.loadUsuarios();
+    this.loadCategorias(); // Adicionado
+    this.loadContas(); // Adicionado
   }
 
 
@@ -67,6 +106,20 @@ export class TransacaoListComponent {
     this.usuarioService.findAll().subscribe({
       next: data => this.usuarios = data,
       error: err => this.handler.tratarErro(err)
+    });
+  }
+
+  loadCategorias(): void {
+    this.categoriaService.findAll().subscribe({
+      next: (data) => (this.categorias = data),
+      error: (err) => this.handler.tratarErro(err),
+    });
+  }
+
+  loadContas(): void {
+    this.contaService.findAll().subscribe({
+      next: (data) => (this.contas = data),
+      error: (err) => this.handler.tratarErro(err),
     });
   }
 
