@@ -1,1 +1,60 @@
-<p>dashboard works!</p>
+<!-- dashboard.component.html -->
+<div class="dashboard-wrapper">
+
+  <!-- ========== ADMIN ========== -->
+  @if (LoginService.hasRole('ADMIN')) {
+    <h2 class="section-title">Painel do Administrador</h2>
+
+    <div class="cards-grid">
+      <div class="dash-card">
+        <div class="icon-wrapper users"><i class="fas fa-user-friends"></i></div>
+        <h3>Usuários</h3>
+        <p class="big-number">520</p>
+        <small>Total cadastrados</small>
+      </div>
+
+      <div class="dash-card">
+        <div class="icon-wrapper transactions"><i class="fas fa-exchange-alt"></i></div>
+        <h3>Transações</h3>
+        <p class="big-number">2 450</p>
+        <small>Movimentações registradas</small>
+      </div>
+
+      <div class="dash-card">
+        <div class="icon-wrapper growth"><i class="fas fa-chart-line"></i></div>
+        <h3>Crescimento</h3>
+        <p class="big-number">+15 %</p>
+        <small>No último mês</small>
+      </div>
+    </div>
+  }
+
+  <!-- ========== USER ========== -->
+  @if (LoginService.hasRole('USER')) {
+    <h2 class="section-title">Meu Resumo</h2>
+
+    <div class="cards-grid">
+      <div class="dash-card">
+        <div class="icon-wrapper accounts"><i class="fas fa-wallet"></i></div>
+        <h3>Saldo em Contas</h3>
+        <p class="big-number">R$ 2 500,00</p>
+        <small>Em todas as contas</small>
+      </div>
+
+      <div class="dash-card">
+        <div class="icon-wrapper goals"><i class="fas fa-bullseye"></i></div>
+        <h3>Metas</h3>
+        <p class="big-number">2</p>
+        <small>Em andamento</small>
+      </div>
+
+      <div class="dash-card">
+        <div class="icon-wrapper budget"><i class="fas fa-receipt"></i></div>
+        <h3>Gasto Mensal</h3>
+        <p class="big-number">R$ 1 200,00</p>
+        <small>Dos seus orçamentos</small>
+      </div>
+    </div>
+  }
+
+</div>

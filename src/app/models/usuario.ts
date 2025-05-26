@@ -9,6 +9,7 @@ export class Usuario {
     dataCriacao?: string;
     status!: StatusUsuario;
     metas?: Meta[];
+    role?: string;
 
     constructor(
         nome: string = '',
@@ -16,7 +17,8 @@ export class Usuario {
         senha: string = '',
         status: StatusUsuario = StatusUsuario.ATIVO,
         dataCriacao: string = new Date().toISOString(),
-        metas: Meta[] = []
+        metas: Meta[] = [],
+        role: string = ''
     ) {
         this.nome = nome;
         this.email = email;

@@ -1,14 +1,24 @@
+// main.ts
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withFetch
+} from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+import { meuhttpInterceptor } from './app/auth/http-interceptor.service';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync()
-    // ...outros providers, se houver...
+    provideHttpClient(
+      withFetch(),                  // 1) ativa fetch
+      withInterceptors([meuhttpInterceptor]) // 2) registra seu interceptor funcional
+    ),
+    provideAnimationsAsync()
   ]
 }).catch(err => console.error(err));
