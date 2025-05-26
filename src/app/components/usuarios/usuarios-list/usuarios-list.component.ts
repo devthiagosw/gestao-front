@@ -37,7 +37,7 @@ export class UsuariosListComponent implements OnInit {
   usuarios: Usuario[] = [];
   usuarioForm: Usuario = this.novoUsuario();
   showModal: boolean = false;
-  displayedColumns: string[] = ['id', 'nome', 'email', 'senha', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'nome', 'email', 'senha', 'status', 'role', 'actions'];
 
   buscaId: number | null = null;
   usuarioId: number | null = null;

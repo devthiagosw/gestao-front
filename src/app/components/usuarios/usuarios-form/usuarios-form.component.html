@@ -61,6 +61,19 @@
           <option value="BLOQUEADO">Bloqueado</option>
         </select>
       </div>
+
+      <div class="form-item">
+        <label class="form-label">Função</label>
+        <select
+          class="form-select"
+          [(ngModel)]="usuario.role"
+          name="role"
+          required
+        >
+          <option value="ADMIN">ADMIN</option>
+          <option value="USER">USER</option>
+        </select>
+      </div>
     </div>
 
     <!-- Botões -->
