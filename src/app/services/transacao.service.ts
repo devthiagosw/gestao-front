@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Transacao } from '../models/transacao';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransacaoService {
   private http = inject(HttpClient);
-  private API = 'http://localhost:8080/transacoes';
+  private API = environment.SERVIDOR+'/transacoes';
 
   // ✅ Nova função para buscar por múltiplos filtros
   buscarComFiltros(filtro: {

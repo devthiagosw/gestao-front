@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Orcamento } from '../models/orcamentos';
 import { OrcamentoDTO } from '../dtos/orcamento.dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class OrcamentoService {
 
   http = inject(HttpClient);
 
-  API = 'http://localhost:8080/orcamentos';
+  API = environment.SERVIDOR+'/orcamentos';
 
   constructor() { }
 
