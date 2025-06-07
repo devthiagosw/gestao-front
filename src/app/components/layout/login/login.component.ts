@@ -17,6 +17,8 @@ export class LoginComponent {
 
   login: Login = new Login();
 
+  showPassword = false; 
+
   router = inject(Router);
   
   loginService = inject(LoginService);

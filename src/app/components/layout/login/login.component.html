@@ -1,34 +1,46 @@
-<div class="container">
-    <div class="row">
-        <div class="col-4">
-            
-        </div>
-        <div class="col-4">
+<!-- adiciona bg-login ao body no template principal ou no index.html -->
+<body class="bg-login">
+  <div class="card shadow-lg glass-card">
+  <div class="card-body p-5" style="width: 500px">
 
-            <div class="card">
-                <div class="card-body">
-                    <h2>FAÇA LOGIN:</h2>
+    <!-- Branding -->
+    <h1 class="brand-title text-center mb-1">Granaguru</h1>
+    <p class="brand-tagline text-center mb-4">gestão financeira</p>
 
-                    <mdb-form-control>
-                        <input [(ngModel)]="login.username" mdbInput type="text" id="login" class="form-control" />
-                        <label mdbLabel class="form-label" for="login">Username:</label>
-                      </mdb-form-control>
-                    <br>    
-                    <mdb-form-control>
-                        <input [(ngModel)]="login.password" mdbInput type="text" id="senha" class="form-control" />
-                        <label mdbLabel class="form-label" for="senha">Password:</label>
-                      </mdb-form-control>
-                    <br>  
-
-                    <button (click)="logar()" type="button" class="btn btn-primary" mdbRipple>Entrar</button>
-
-                </div>
-              </div>
-
-              
-        </div>
-        <div class="col-4">
-            
-        </div>
+    <!-- Usuário -->
+    <div class="mb-3">
+      <label for="login" class="form-label">Usuário</label>
+      <input  [(ngModel)]="login.username"
+              mdbInput
+              type="text"
+              id="login"
+              class="form-control"
+              placeholder="Nome do usuário"/>
     </div>
+
+    <!-- Senha + ícone -->
+    <div class="mb-3 position-relative">
+      <label for="senha" class="form-label">Senha</label>
+      <input  [(ngModel)]="login.password"
+              mdbInput
+              [type]="showPassword ? 'text' : 'password'"
+              id="senha"
+              class="form-control pe-5"
+              placeholder="Senha"/>
+      <i  class="fas fa-eye toggle-password"
+          [class.fa-eye-slash]="showPassword"
+          [class.fa-eye]="!showPassword"
+          (click)="showPassword = !showPassword"></i>
+    </div>
+
+    <!-- botão -->
+    <button (click)="logar()"
+            class="btn btn-primary w-100"
+            mdbRipple>
+      Login
+    </button>
+
+  </div>
 </div>
+
+</body>

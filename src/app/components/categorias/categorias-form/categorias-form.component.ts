@@ -9,6 +9,7 @@ import { NgbModal, NgbModalRef, NgbModalModule } from '@ng-bootstrap/ng-bootstra
 import { CommonModule } from '@angular/common';
 import { GlobalHandlerService } from '../../../services/global-handler.service';
 import { SwalService } from '../../../services/swal.service';
+import { LoginService } from '../../../auth/login.service';
 
 @Component({
   selector: 'app-categoria-form',
@@ -30,7 +31,8 @@ export class CategoriasFormComponent implements OnInit {
     private UsuarioService: UsuarioService,
     private swal: SwalService,
     private handler: GlobalHandlerService,
-    private modalService: NgbModal // ✅ injetado aqui!
+    private modalService: NgbModal, // ✅ injetado aqui!
+    public loginService: LoginService
   ) {
     this.form = this.fb.group({
       nomeCategoria: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -42,20 +44,63 @@ export class CategoriasFormComponent implements OnInit {
   ngOnInit(): void {
     this.carregarUsuarios();
 
+    // Garantir que categoria.usuario esteja inicializado
+    if (!this.categoria.usuario) {
+      this.categoria.usuario = {} as Usuario;
+    }
+
     if (this.categoria?.id) {
       this.form.patchValue(this.categoria); // Preenche o form na edição
     }
   }
 
   carregarUsuarios(): void {
-    this.UsuarioService.findAll().subscribe({
-      next: (res) => this.usuarios = res,
-      error: (err) => this.handler.tratarErro(err)
-    });
+    // Verificar a role do usuário logado
+    const isAdmin = this.loginService.hasRole('ADMIN');
+    const userLogado = this.loginService.getUserLogado();
+    
+    if (isAdmin) {
+      // Se for admin, busca todos os usuários
+      this.UsuarioService.findAll().subscribe({
+        next: (res) => this.usuarios = res,
+        error: (err) => this.handler.tratarErro(err)
+      });
+    } else {
+      // Se for USER, busca apenas o usuário logado e já o atribui à categoria
+      if (userLogado && userLogado.id) {
+        // Busca detalhes completos do usuário
+        this.UsuarioService.findById(userLogado.id).subscribe({
+          next: (usuario) => {
+            if (usuario) {
+              this.usuarios = [usuario];
+              // Já seleciona o usuário logado para a categoria
+              this.categoria.usuario = usuario;
+            }
+          },
+          error: (err) => this.handler.tratarErro(err)
+        });
+      }
+    }
   }
 
 
   abrirModalUsuario(template: any): void {
+    // Se o usuário não for ADMIN, não abre o modal e usa o usuário logado automaticamente
+    if (!this.loginService.hasRole('ADMIN')) {
+      const userLogado = this.loginService.getUserLogado();
+      if (userLogado && userLogado.id) {
+        this.UsuarioService.findById(userLogado.id).subscribe({
+          next: (usuario) => {
+            if (usuario) {
+              this.categoria.usuario = usuario;
+            }
+          },
+          error: (err) => this.handler.tratarErro(err)
+        });
+      }
+      return;
+    }
+    
     this.modalRef = this.modalService.open(template, { size: 'md' });
   }
 

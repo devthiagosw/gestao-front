@@ -7,6 +7,7 @@ import { ContaFormComponent } from '../conta-form/conta-form.component';
 import { Conta } from '../../../models/conta';
 import { SwalService } from '../../../services/swal.service';
 import { GlobalHandlerService } from '../../../services/global-handler.service';
+import { LoginService } from '../../../auth/login.service';
 
 @Component({
   selector: 'app-conta',
@@ -28,7 +29,8 @@ export class ContasListComponent implements OnInit {
   constructor(
     private contaService: ContaService,
     private swal: SwalService,
-    private handler: GlobalHandlerService
+    private handler: GlobalHandlerService,
+    private loginService: LoginService
   ) {}
 
   ngOnInit(): void {

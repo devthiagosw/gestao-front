@@ -7,9 +7,10 @@
     <label class="form-label">Usuário</label>
     <div class="d-flex align-items-center gap-2">
       <span class="form-control">
-        {{ categoria.usuario.nome || "Nenhum selecionado" }}
+        {{ categoria.usuario.nome || 'Nenhum selecionado' }}
       </span>
       <button
+        *ngIf="loginService.hasRole('ADMIN')"
         type="button"
         class="btn btn-outline-primary"
         (click)="abrirModalUsuario(modalUsuario)"

@@ -37,23 +37,55 @@
       <div class="dash-card">
         <div class="icon-wrapper accounts"><i class="fas fa-wallet"></i></div>
         <h3>Saldo em Contas</h3>
-        <p class="big-number">R$ 2 500,00</p>
+        <p class="big-number">R$ 13.120,00</p>
         <small>Em todas as contas</small>
       </div>
 
       <div class="dash-card">
         <div class="icon-wrapper goals"><i class="fas fa-bullseye"></i></div>
         <h3>Metas</h3>
-        <p class="big-number">2</p>
+        <p class="big-number">{{ metas.length }}</p>
         <small>Em andamento</small>
       </div>
 
       <div class="dash-card">
         <div class="icon-wrapper budget"><i class="fas fa-receipt"></i></div>
         <h3>Gasto Mensal</h3>
-        <p class="big-number">R$ 1 200,00</p>
+        <p class="big-number">R$ 1.000,00</p>
         <small>Dos seus orçamentos</small>
       </div>
+    </div>
+
+    <!-- Gráfico de Pizza para Metas -->
+    <div class="chart-container">
+      <h2 class="section-title">Progresso das Metas</h2>
+      @if (metas.length > 0) {
+        <div class="charts-flex-container">
+          <div class="chart-wrapper">
+            <canvas #metasChart></canvas>
+          </div>
+          
+          <div class="metas-details">
+            @for (meta of metas; track meta.id) {
+              <div class="meta-progress-card">
+                <h4>{{ meta.descricao }}</h4>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" 
+                       [style.width.%]="(meta.valorAtual / meta.valorObjetivo) * 100">
+                  </div>
+                </div>
+                <div class="meta-info">
+                  <span>Atual: {{ meta.valorAtual | currency:'BRL':'symbol':'1.2-2' }}</span>
+                  <span>Meta: {{ meta.valorObjetivo | currency:'BRL':'symbol':'1.2-2' }}</span>
+                  <span class="percentage">{{ ((meta.valorAtual / meta.valorObjetivo) * 100).toFixed(1) }}%</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <p class="no-data-message">Você não possui metas cadastradas.</p>
+      }
     </div>
   }
 

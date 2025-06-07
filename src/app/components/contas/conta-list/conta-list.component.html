@@ -9,7 +9,7 @@
       
         <div class="card-body">
         <div class="direita">
-          <button type="button" class="btn-NovoModal" (click)="openModal()">Nova Conta</button>
+          <button style="margin-bottom: 12px;" type="button" class="btn-NovoModal" (click)="openModal()">Nova Conta</button>
           </div>
           <!-- Modal -->
               <div *ngIf="showModal" class="modal-overlay">
@@ -22,41 +22,35 @@
                 </div>
               </div>
               
-            <div class="conta-list">                
-              <div *ngFor="let c of conta" class="conta-card">
-                <div class="conta-info">                  
-                  <br>
-                  <table border="1"  class="table table-striped">
-                    <thead class="table-header">
-                      <tr>
-                        <th> NOME DA CONTA</th>
-                        <th> ID </th>
-                        <th> TIPO</th>
-                        <th> SALDO INICIAL </th>
-                        <th> DATA DE CRIACAO </th>
-                        <th> STATUS </th>
-                        <th>  </th>
-                        <th>  </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>{{ c.nomeConta }}</td>
-                        <td> {{ c.id }}</td>
-                        <td> {{ c.tipoConta }}</td>
-                        <td> {{ c.saldoInicial   }}</td>
-                        <td> {{ c.dataCriacao  }}</td>
-                        <td> {{ c.status }}</td>
-                        <td>
-                          <button type="button" class="btn-Editar" (click)="openModal(c)">Editar</button>
-                          <button type="button" class="btn-Excluir" (click)="deleteConta(c.id)">Excluir</button>
-                      </td>
-                      </tr>
-                    </tbody>
-                </table>
-                </div>
-                <div class="conta-actions"> </div>
-              </div>
+            <div class="conta-list">
+              <table border="1" class="table table-striped">
+                <thead class="table-header" style="text-align: center;">
+                  <tr>
+                    <th>NOME DA CONTA</th>
+                    <!-- <th>ID</th> -->
+                    <th>TIPO</th>
+                    <th>SALDO INICIAL</th>
+                    <!-- <th>DATA DE CRIACAO</th> -->
+                    <th>STATUS</th>
+                    <th>AÇÕES</th>
+                  </tr>
+                </thead>
+                <tbody style="text-align: center;">
+                  <tr *ngFor="let c of conta">
+                    <td>{{ c.nomeConta }}</td>
+                    <!-- <td>{{ c.id }}</td> -->
+                    <td>{{ c.tipoConta }}</td>
+                    <td>{{ c.saldoInicial | currency:'BRL':'symbol' }}</td>
+                    
+                    <!-- <td>{{ c.dataCriacao }}</td> -->
+                    <td>{{ c.status }}</td>
+                    <td>
+                      <button type="button" class="btn-Editar" (click)="openModal(c)">Editar</button>
+                      <button type="button" class="btn-Excluir" (click)="deleteConta(c.id)">Excluir</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>    
         </div>
       </div>
