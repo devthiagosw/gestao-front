@@ -11,7 +11,7 @@ export class MetaService {
 
   http = inject(HttpClient);
 
-  API = environment.SERVIDOR+'/metas';
+  API = environment.SERVIDOR+'/api/metas';
 
   constructor() { }
 

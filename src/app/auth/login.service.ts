@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Login } from './login';
 import { Usuario } from './usuario';
@@ -19,7 +20,16 @@ export class LoginService {
 
 
   logar(login: Login): Observable<string> {
-    return this.http.post<string>(this.API, login, {responseType: 'text' as 'json'});
+    // Mapeia username/password para email/senha conforme o backend espera
+    const loginRequest = {
+      email: login.username,
+      senha: login.password
+    };
+    
+    // O backend retorna { token: "..." }, então precisamos extrair o token
+    return this.http.post<{ token: string }>(this.API, loginRequest).pipe(
+      map(response => response.token)
+    );
   }
 
   addToken(token: string) {

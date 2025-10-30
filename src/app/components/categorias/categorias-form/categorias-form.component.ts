@@ -1,4 +1,4 @@
-import { UsuarioService } from './../../../services/usuarios.service';
+import { UsuarioService } from '../../../services/usuarios.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Categoria } from '../../../models/categoria';

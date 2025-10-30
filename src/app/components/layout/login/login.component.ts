@@ -32,13 +32,16 @@ export class LoginComponent {
       next: token => {
         if (token) {
           this.loginService.addToken(token);
+          this.gerarToast().fire({ icon: "success", title: "Seja bem-vindo!" });
+          this.router.navigate(['admin/dashboard']);
+        } else {
+          Swal.fire('Erro ao fazer login!', 'Token não recebido', 'error');
         }
-        
-        this.gerarToast().fire({ icon: "success", title: "Seja bem-vindo!" });
-        this.router.navigate(['admin/dashboard']);
       },
       error: erro => {
-        Swal.fire('Usuário ou senha incorretos!', '', 'error');
+        console.error('Erro no login:', erro);
+        const mensagem = erro.error?.message || 'Usuário ou senha incorretos!';
+        Swal.fire('Erro ao fazer login!', mensagem, 'error');
       }
     });
   }

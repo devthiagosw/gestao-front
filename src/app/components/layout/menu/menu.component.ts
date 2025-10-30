@@ -1,4 +1,4 @@
-import { LoginService } from './../../../auth/login.service';
+import { LoginService } from '../../../auth/login.service';
 import { Component, inject } from '@angular/core';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { Usuario } from '../../../auth/usuario';

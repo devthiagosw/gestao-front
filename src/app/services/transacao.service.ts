@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class TransacaoService {
   private http = inject(HttpClient);
-  private API = environment.SERVIDOR+'/transacoes';
+  private API = environment.SERVIDOR+'/api/transacoes';
 
   // ✅ Nova função para buscar por múltiplos filtros
   buscarComFiltros(filtro: {

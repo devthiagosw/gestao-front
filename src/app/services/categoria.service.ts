@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class CategoriaService {
   private http = inject(HttpClient);
-  private readonly API = environment.SERVIDOR+'/categorias'; // pode trocar depois por environment
+  private readonly API = environment.SERVIDOR+'/api/categorias';
 
   /** 🔍 Buscar todas as categorias */
   findAll(): Observable<Categoria[]> {

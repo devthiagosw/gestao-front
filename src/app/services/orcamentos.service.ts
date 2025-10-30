@@ -12,7 +12,7 @@ export class OrcamentoService {
 
   http = inject(HttpClient);
 
-  API = environment.SERVIDOR+'/orcamentos';
+  API = environment.SERVIDOR+'/api/orcamentos';
 
   constructor() { }
 

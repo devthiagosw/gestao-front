@@ -11,7 +11,7 @@ export class ContaService {
 
   http = inject(HttpClient);
 
-  API = environment.SERVIDOR+'/contas';
+  API = environment.SERVIDOR+'/api/contas';
 
   constructor() { }
 

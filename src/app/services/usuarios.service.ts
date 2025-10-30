@@ -11,7 +11,7 @@ export class UsuarioService {
 
   http = inject(HttpClient);
 
-  API = environment.SERVIDOR+'/usuarios';
+  API = environment.SERVIDOR+'/api/usuarios';
 
   constructor() { }
 
